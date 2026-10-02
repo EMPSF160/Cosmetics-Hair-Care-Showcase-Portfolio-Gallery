@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Concierge & FAQ — HAIRÉA Atelier</title>
+  <meta name="description" content="Reach the HAIRÉA Trichology Concierge, book a virtual consultation, or browse our comprehensive FAQ directory.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="alternate icon" href="favicon.svg">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <!-- Contact Banner -->
+  <section class="py-5 bg-secondary border-bottom">
+    <div class="container-fluid px-lg-5 py-3">
+      <div class="max-w-700">
+        <span class="editorial-tag">Client Support & Inquiries</span>
+        <h1 class="editorial-heading-lg mt-2 mb-3">Atelier Concierge</h1>
+        <p class="text-secondary lead">
+          Our team of licensed trichologists and formulation specialists is at your service for bespoke routine advice, formula adjustments, or order tracking.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact & FAQ Section -->
+  <section class="py-5">
+    <div class="container-fluid px-lg-5">
+      <div class="row g-5">
+        
+        <!-- Live Concierge Message Form -->
+        <div class="col-lg-6">
+          <div class="glass-card p-4 p-md-5">
+            <span class="editorial-tag mb-2">Direct Laboratory Dispatch</span>
+            <h3 class="font-serif mb-4">Send a Message</h3>
+            
+            <form onsubmit="handleConciergeSubmit(event)">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label small text-muted">First Name</label>
+                  <input type="text" id="contactName" class="form-control rounded-pill px-3" placeholder="Elena" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small text-muted">Email Address</label>
+                  <input type="email" id="contactEmail" class="form-control rounded-pill px-3" placeholder="elena@paris.com" required>
+                </div>
+                <div class="col-12">
+                  <label class="form-label small text-muted">Subject / Inquiry Type</label>
+                  <select class="form-select rounded-pill px-3" id="contactSubject">
+                    <option value="Formula Recommendation">Formula / Diagnostic Recommendation</option>
+                    <option value="Order & Shipping Status">Order & Shipping Status</option>
+                    <option value="Subscription Modification">Subscription & Refill Modification</option>
+                    <option value="Salon & Wholesale Partnership">Salon & Wholesale Partnership</option>
+                  </select>
+                </div>
+                <div class="col-12">
+                  <label class="form-label small text-muted">Your Message</label>
+                  <textarea id="contactMessage" class="form-control rounded-4 p-3" rows="4" placeholder="How can our formulation team assist your hair ritual today?" required></textarea>
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="btn btn-hairea-gold w-100 py-3">
+                    Transmit to Concierge Desk
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- FAQ Accordion & Direct Contact Info -->
+        <div class="col-lg-6" id="faq">
+          <div class="mb-4">
+            <span class="editorial-tag">Immediate Answers</span>
+            <h3 class="font-serif mb-3">Frequently Asked Questions</h3>
+          </div>
+
+          <div class="accordion accordion-flush glass-card overflow-hidden" id="faqAccordion">
+            <div class="accordion-item bg-transparent">
+              <h2 class="accordion-header">
+                <button class="accordion-button bg-transparent fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                  How does bespoke formulation differ from drugstore products?
+                </button>
+              </h2>
+              <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                <div class="accordion-body small text-secondary">
+                  Drugstore hair products use generic, mass-produced formulas packed with heavy silicones and cheap sulfates to give a short-term shiny illusion. HAIRÉA blends bio-mimetic lipid ceramides and peptide matrices calibrated to your exact porosity, scalp oiliness, and climate humidity.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item bg-transparent">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed bg-transparent fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                  Are all formulations 100% color-safe and keratin-safe?
+                </button>
+              </h2>
+              <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body small text-secondary">
+                  Yes, unconditionally. All of our shampoos use coconut-derived bio-surfactants with an optimal pH of 5.0 to 5.5, ensuring they never strip salon pigments or dissolve keratin smoothing bonds.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item bg-transparent">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed bg-transparent fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                  How does the subscription refill system work?
+                </button>
+              </h2>
+              <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body small text-secondary">
+                  You save 20% on every scheduled shipment. You can choose a 4, 6, 8, or 12-week cadence. You can pause, adjust delivery dates, or change product formulas anytime via your Account Portal with zero penalties.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item bg-transparent">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed bg-transparent fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                  What is your 30-Day Strand Satisfaction Guarantee?
+                </button>
+              </h2>
+              <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body small text-secondary">
+                  If your bespoke formulation does not noticeably improve your hair texture, moisture retention, and scalp balance within 30 days, our trichology lab will re-blend a modified formula for free or refund your purchase.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Details Card -->
+          <div class="mt-4 p-4 bg-secondary rounded-4">
+            <div class="row g-3 small">
+              <div class="col-sm-6">
+                <span class="text-muted d-block">Paris Atelier:</span>
+                <strong>18 Rue du Faubourg Saint-Honoré, 75008 Paris</strong>
+              </div>
+              <div class="col-sm-6">
+                <span class="text-muted d-block">Direct Concierge Email:</span>
+                <strong>concierge@hairea-atelier.com</strong>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    function handleConciergeSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById("contactName").value;
+      const sub = document.getElementById("contactSubject").value;
+      alert(`✨ Thank you, ${name}! Your inquiry regarding "${sub}" has been routed to our Lead Trichologist. Expected reply time: under 4 hours.`);
+      e.target.reset();
+    }
+  </script>
+</body>
+</html>

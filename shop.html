@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop All Formulations — HAIRÉA Cosmetics Atelier</title>
+  <meta name="description" content="Explore clean, sulfate-free, silicone-free luxury hair formulations. Filter by hair type, scalp condition, concern, and active botanicals.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="alternate icon" href="favicon.svg">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <!-- Shop Header Banner -->
+  <section class="py-5 bg-secondary border-bottom">
+    <div class="container-fluid px-lg-5 py-3">
+      <div class="max-w-700">
+        <span class="editorial-tag">Complete Formula Compendium</span>
+        <h1 class="editorial-heading-lg mt-2 mb-3">All Formulations</h1>
+        <p class="text-secondary lead">
+          Clean trichological hair care crafted without sulfates, synthetic silicones, parabens, or phthalates. Filter below to curate your bespoke daily ritual.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Catalog Section -->
+  <section class="py-5">
+    <div class="container-fluid px-lg-5">
+      <div class="row g-4">
+        <!-- Sidebar Filters (Desktop) -->
+        <div class="col-lg-3 d-none d-lg-block">
+          <div class="glass-card p-4 sticky-top" style="top: 100px; max-height: calc(100vh - 120px); overflow-y: auto;">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+              <h5 class="font-serif mb-0">Refine Catalog</h5>
+              <button class="btn btn-sm btn-link text-muted p-0" onclick="ShopCatalog.clearAllFilters()">Reset All</button>
+            </div>
+
+            <!-- Category Filter -->
+            <div class="mb-4">
+              <h6 class="small text-uppercase fw-bold text-muted mb-3" style="letter-spacing: 0.1em;">Category</h6>
+              <div class="d-flex flex-column gap-2" id="filterCategory">
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input" type="radio" name="catRadio" value="All" checked onchange="ShopCatalog.applyFilter('category', 'All')">
+                  <span>All Categories</span>
+                </label>
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input" type="radio" name="catRadio" value="Shampoo" onchange="ShopCatalog.applyFilter('category', 'Shampoo')">
+                  <span>Shampoo</span>
+                </label>
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input" type="radio" name="catRadio" value="Conditioner" onchange="ShopCatalog.applyFilter('category', 'Conditioner')">
+                  <span>Conditioner</span>
+                </label>
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input" type="radio" name="catRadio" value="Treatment" onchange="ShopCatalog.applyFilter('category', 'Treatment')">
+                  <span>Treatment & Masks</span>
+                </label>
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input" type="radio" name="catRadio" value="Scalp Care" onchange="ShopCatalog.applyFilter('category', 'Scalp Care')">
+                  <span>Scalp Care</span>
+                </label>
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input" type="radio" name="catRadio" value="Styling & Oil" onchange="ShopCatalog.applyFilter('category', 'Styling & Oil')">
+                  <span>Styling & Glossing Oils</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Hair Type Filter -->
+            <div class="mb-4">
+              <h6 class="small text-uppercase fw-bold text-muted mb-3" style="letter-spacing: 0.1em;">Hair Pattern</h6>
+              <div class="d-flex flex-column gap-2" id="filterHairType">
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="Straight" onchange="ShopCatalog.toggleArrayFilter('hairType', 'Straight')">
+                  <span>Straight (1A-1C)</span>
+                </label>
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="Wavy" onchange="ShopCatalog.toggleArrayFilter('hairType', 'Wavy')">
+                  <span>Wavy (2A-2C)</span>
+                </label>
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="Curly" onchange="ShopCatalog.toggleArrayFilter('hairType', 'Curly')">
+                  <span>Curly (3A-3C)</span>
+                </label>
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="Coily" onchange="ShopCatalog.toggleArrayFilter('hairType', 'Coily')">
+                  <span>Coily (4A-4C)</span>
+                </label>
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="Damaged" onchange="ShopCatalog.toggleArrayFilter('hairType', 'Damaged')">
+                  <span>Bleached / Damaged</span>
+                </label>
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="Color-Treated" onchange="ShopCatalog.toggleArrayFilter('hairType', 'Color-Treated')">
+                  <span>Color-Treated</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Hair Concern Filter -->
+            <div class="mb-4">
+              <h6 class="small text-uppercase fw-bold text-muted mb-3" style="letter-spacing: 0.1em;">Primary Concern</h6>
+              <div class="d-flex flex-column gap-2" id="filterConcern">
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="Dryness & Dehydration" onchange="ShopCatalog.toggleArrayFilter('concerns', 'Dryness & Dehydration')">
+                  <span>Dryness & Dehydration</span>
+                </label>
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="Frizz Control" onchange="ShopCatalog.toggleArrayFilter('concerns', 'Frizz Control')">
+                  <span>Frizz Control</span>
+                </label>
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="Damage & Breakage" onchange="ShopCatalog.toggleArrayFilter('concerns', 'Damage & Breakage')">
+                  <span>Damage & Breakage</span>
+                </label>
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="Scalp Balance & Detox" onchange="ShopCatalog.toggleArrayFilter('concerns', 'Scalp Balance & Detox')">
+                  <span>Scalp Balance & Detox</span>
+                </label>
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="Curl Definition & Bounce" onchange="ShopCatalog.toggleArrayFilter('concerns', 'Curl Definition & Bounce')">
+                  <span>Curl Definition & Bounce</span>
+                </label>
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="Dullness & Shine" onchange="ShopCatalog.toggleArrayFilter('concerns', 'Dullness & Shine')">
+                  <span>Dullness & Shine</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Free-From Clean Standards -->
+            <div class="mb-4">
+              <h6 class="small text-uppercase fw-bold text-muted mb-3" style="letter-spacing: 0.1em;">Clean Standards</h6>
+              <div class="d-flex flex-column gap-2">
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="Sulfate-Free" onchange="ShopCatalog.toggleArrayFilter('freeFrom', 'Sulfate-Free')">
+                  <span>Sulfate-Free</span>
+                </label>
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="Silicone-Free" onchange="ShopCatalog.toggleArrayFilter('freeFrom', 'Silicone-Free')">
+                  <span>Silicone-Free</span>
+                </label>
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="Paraben-Free" onchange="ShopCatalog.toggleArrayFilter('freeFrom', 'Paraben-Free')">
+                  <span>Paraben-Free</span>
+                </label>
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="Vegan" onchange="ShopCatalog.toggleArrayFilter('freeFrom', 'Vegan')">
+                  <span>100% Vegan</span>
+                </label>
+                <label class="form-check d-flex align-items-center gap-2 small cursor-pointer">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="Cruelty-Free" onchange="ShopCatalog.toggleArrayFilter('freeFrom', 'Cruelty-Free')">
+                  <span>Cruelty-Free</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Price Slider -->
+            <div class="mb-3">
+              <div class="d-flex justify-content-between small text-muted mb-2">
+                <span class="text-uppercase fw-bold">Max Price:</span>
+                <span id="priceSliderValue" class="fw-bold text-dark">$60.00</span>
+              </div>
+              <input type="range" class="form-range" id="priceRangeInput" min="30" max="60" step="2" value="60" oninput="ShopCatalog.handlePriceChange(this.value)">
+            </div>
+          </div>
+        </div>
+
+        <!-- Products Catalog Grid -->
+        <div class="col-lg-9">
+          <!-- Filter Controls Bar -->
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4 p-3 glass-card">
+            <div class="d-flex align-items-center gap-3">
+              <button class="btn btn-sm btn-hairea-outline d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterDrawer">
+                <i data-lucide="sliders-horizontal" style="width: 14px; height: 14px;"></i> Filters
+              </button>
+              <span class="small text-muted" id="productsFoundCount">Showing all formulas</span>
+            </div>
+
+            <div class="d-flex align-items-center gap-3 ms-auto">
+              <span class="small text-muted d-none d-sm-inline">Sort by:</span>
+              <select class="form-select form-select-sm bg-transparent border-0 fw-bold" style="width: auto;" id="sortSelect" onchange="ShopCatalog.applySort(this.value)">
+                <option value="featured">Featured Atelier</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="rating">Highest Rated</option>
+                <option value="reviews">Most Reviewed</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Active Filter Badges -->
+          <div id="activeFilterTags" class="d-flex flex-wrap gap-2 mb-4"></div>
+
+          <!-- Product Grid -->
+          <div class="row g-4" id="shopCatalogGrid">
+            <!-- Rendered Dynamically -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mobile Filters Drawer -->
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="filterDrawer">
+    <div class="offcanvas-header border-bottom">
+      <h5 class="offcanvas-title font-serif">Refine Formulations</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body p-4" id="mobileFiltersBody">
+      <p class="small text-muted">Filter by Category, Hair Pattern, and Clean Standards from the catalog.</p>
+      <button class="btn btn-hairea-gold w-100 mb-3" data-bs-dismiss="offcanvas">Apply Filters</button>
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    const ShopCatalog = {
+      filters: {
+        category: "All",
+        hairType: [],
+        concerns: [],
+        freeFrom: [],
+        maxPrice: 60
+      },
+      sortBy: "featured",
+
+      init() {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("category")) {
+          this.filters.category = params.get("category");
+          const radio = document.querySelector(`input[name="catRadio"][value="${this.filters.category}"]`);
+          if (radio) radio.checked = true;
+        }
+        if (params.get("concern")) {
+          this.filters.concerns.push(params.get("concern"));
+        }
+        this.render();
+      },
+
+      applyFilter(key, value) {
+        this.filters[key] = value;
+        this.render();
+      },
+
+      toggleArrayFilter(key, value) {
+        const arr = this.filters[key];
+        const idx = arr.indexOf(value);
+        if (idx > -1) arr.splice(idx, 1);
+        else arr.push(value);
+        this.render();
+      },
+
+      handlePriceChange(val) {
+        this.filters.maxPrice = parseFloat(val);
+        document.getElementById("priceSliderValue").innerText = `$${val}.00`;
+        this.render();
+      },
+
+      applySort(sortKey) {
+        this.sortBy = sortKey;
+        this.render();
+      },
+
+      clearAllFilters() {
+        this.filters = { category: "All", hairType: [], concerns: [], freeFrom: [], maxPrice: 60 };
+        document.querySelectorAll(".filter-checkbox").forEach(c => c.checked = false);
+        const radio = document.querySelector(`input[name="catRadio"][value="All"]`);
+        if (radio) radio.checked = true;
+        document.getElementById("priceRangeInput").value = 60;
+        document.getElementById("priceSliderValue").innerText = "$60.00";
+        this.render();
+      },
+
+      render() {
+        const grid = document.getElementById("shopCatalogGrid");
+        const countEl = document.getElementById("productsFoundCount");
+        const activeTagsEl = document.getElementById("activeFilterTags");
+        if (!grid) return;
+
+        let products = Storage.getProducts();
+
+        // Filter Category
+        if (this.filters.category !== "All") {
+          products = products.filter(p => p.category.toLowerCase() === this.filters.category.toLowerCase());
+        }
+
+        // Filter Hair Type
+        if (this.filters.hairType.length > 0) {
+          products = products.filter(p => this.filters.hairType.some(ht => p.hairType.includes(ht)));
+        }
+
+        // Filter Concerns
+        if (this.filters.concerns.length > 0) {
+          products = products.filter(p => this.filters.concerns.some(c => p.concerns.includes(c)));
+        }
+
+        // Filter Free From
+        if (this.filters.freeFrom.length > 0) {
+          products = products.filter(p => this.filters.freeFrom.every(f => p.freeFrom.includes(f)));
+        }
+
+        // Filter Price
+        products = products.filter(p => p.price <= this.filters.maxPrice);
+
+        // Sorting
+        if (this.sortBy === "price-low") products.sort((a, b) => a.price - b.price);
+        else if (this.sortBy === "price-high") products.sort((a, b) => b.price - a.price);
+        else if (this.sortBy === "rating") products.sort((a, b) => b.rating - a.rating);
+        else if (this.sortBy === "reviews") products.sort((a, b) => b.reviewsCount - a.reviewsCount);
+
+        countEl.innerText = `Showing ${products.length} formula${products.length === 1 ? '' : 's'}`;
+
+        // Render Active filter badges
+        let tagsHtml = [];
+        if (this.filters.category !== "All") tagsHtml.push(`<span class="badge bg-dark text-light p-2">${this.filters.category} ✕</span>`);
+        this.filters.hairType.forEach(t => tagsHtml.push(`<span class="badge bg-secondary text-dark p-2">${t} ✕</span>`));
+        this.filters.concerns.forEach(c => tagsHtml.push(`<span class="badge bg-secondary text-dark p-2">${c} ✕</span>`));
+        this.filters.freeFrom.forEach(f => tagsHtml.push(`<span class="badge bg-secondary text-dark p-2">${f} ✕</span>`));
+        if (activeTagsEl) activeTagsEl.innerHTML = tagsHtml.join("");
+
+        if (products.length === 0) {
+          grid.innerHTML = `
+            <div class="col-12 text-center py-5">
+              <i data-lucide="sparkles" class="w-12 h-12 text-muted mb-3 mx-auto" style="width: 48px; height: 48px;"></i>
+              <h3 class="font-serif mb-2">No Formulations Match Criteria</h3>
+              <p class="text-muted small mb-4">Try relaxing your filter parameters or resetting the price range.</p>
+              <button class="btn btn-hairea-gold px-4" onclick="ShopCatalog.clearAllFilters()">Reset All Filters</button>
+            </div>
+          `;
+          if (window.lucide) lucide.createIcons();
+          return;
+        }
+
+        grid.innerHTML = products.map(p => `
+          <div class="col-md-6 col-lg-4" data-aos="fade-up">
+            <div class="product-card">
+              <div class="product-card-img-wrapper">
+                <img src="${p.image}" alt="${p.name}">
+                <span class="product-badge-pill">${p.badge}</span>
+                <div class="product-actions-hover">
+                  <button class="action-round-btn" data-wishlist-id="${p.id}" onclick="App.toggleWishlist(Storage.getProducts().find(x => x.id === '${p.id}'))" title="Save to wishlist">
+                    <i data-lucide="heart"></i>
+                  </button>
+                  <button class="action-round-btn" onclick="App.openQuickView('${p.id}')" title="Quick View">
+                    <i data-lucide="eye"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="product-card-body">
+                <span class="product-category-tag">${p.category}</span>
+                <h3 class="product-title"><a href="product.html?id=${p.id}">${p.name}</a></h3>
+                <p class="product-subtitle">${p.subtitle}</p>
+                <div class="product-tags-row">
+                  ${p.freeFrom.slice(0, 3).map(f => `<span class="product-tag-chip">${f}</span>`).join("")}
+                </div>
+                <div class="product-price-row">
+                  <div>
+                    <div class="price-display">${App.formatPrice(p.price)}</div>
+                    <span class="price-sub">or ${App.formatPrice(p.price * 0.8)} / sub</span>
+                  </div>
+                  <button class="btn btn-sm btn-hairea-dark rounded-pill px-3" onclick="App.addToCartById('${p.id}', false)">
+                    Add to Bag
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `).join("");
+
+        if (window.lucide) lucide.createIcons();
+        App.updateWishlistIcons();
+      }
+    };
+
+    document.addEventListener("DOMContentLoaded", () => ShopCatalog.init());
+  </script>
+</body>
+</html>

@@ -1,0 +1,1001 @@
+/**
+ * HAIRÉA - Main Application Engine
+ * Handles Navigation, Cart Drawer, Wishlist, Themes, Currency, Modals, and Shared Components
+ */
+
+const CURRENCIES = {
+  USD: { symbol: "$", rate: 1.0 },
+  EUR: { symbol: "€", rate: 0.92 },
+  GBP: { symbol: "£", rate: 0.79 },
+  CAD: { symbol: "CA$", rate: 1.35 }
+};
+
+const App = {
+  currency: Storage.getCurrency(),
+  theme: localStorage.getItem("hairea_theme") || "light",
+  dir: localStorage.getItem("hairea_dir") || "ltr",
+
+  init() {
+    this.applyTheme(this.theme);
+    this.applyDirection(this.dir);
+    this.renderHeader();
+    this.renderFooter();
+    this.renderCartDrawer();
+    this.renderSearchModal();
+    this.renderQuickViewModal();
+    this.renderAuthModal();
+    this.initEventListeners();
+    this.updateBadges();
+    this.initComparisonSliders();
+  },
+
+  formatPrice(amountInUSD) {
+    const cur = CURRENCIES[this.currency] || CURRENCIES.USD;
+    const converted = (amountInUSD * cur.rate).toFixed(2);
+    return `${cur.symbol}${converted}`;
+  },
+
+  setCurrency(code) {
+    if (CURRENCIES[code]) {
+      this.currency = code;
+      Storage.setCurrency(code);
+      window.location.reload();
+    }
+  },
+
+  applyTheme(theme) {
+    this.theme = theme;
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("hairea_theme", theme);
+    const themeBtn = document.getElementById("themeToggleBtn");
+    if (themeBtn) {
+      themeBtn.innerHTML = theme === "dark" 
+        ? `<i data-lucide="sun" class="w-5 h-5"></i>` 
+        : `<i data-lucide="moon" class="w-5 h-5"></i>`;
+      if (window.lucide) lucide.createIcons();
+    }
+  },
+
+  toggleTheme() {
+    const newTheme = this.theme === "dark" ? "light" : "dark";
+    this.applyTheme(newTheme);
+    this.toast(`Switched to ${newTheme.toUpperCase()} theme`);
+  },
+
+  applyDirection(dir) {
+    this.dir = dir;
+    document.documentElement.setAttribute("dir", dir);
+    localStorage.setItem("hairea_dir", dir);
+  },
+
+  toggleDirection() {
+    const newDir = this.dir === "rtl" ? "ltr" : "rtl";
+    this.applyDirection(newDir);
+    this.toast(`Layout set to ${newDir.toUpperCase()}`);
+  },
+
+  toast(message, type = "info") {
+    let container = document.getElementById("haireaToastContainer");
+    if (!container) {
+      container = document.createElement("div");
+      container.id = "haireaToastContainer";
+      container.className = "toast-container-custom";
+      document.body.appendChild(container);
+    }
+
+    const toast = document.createElement("div");
+    toast.className = "toast-hairea";
+    toast.innerHTML = `
+      <i data-lucide="sparkles" style="color: var(--accent-champagne); width: 18px; height: 18px;"></i>
+      <span>${message}</span>
+    `;
+    container.appendChild(toast);
+    if (window.lucide) lucide.createIcons();
+
+    setTimeout(() => {
+      toast.style.opacity = "0";
+      toast.style.transform = "translateY(10px)";
+      setTimeout(() => toast.remove(), 300);
+    }, 3500);
+  },
+
+  // Header Component Rendering
+  renderHeader() {
+    const headerContainer = document.getElementById("header-placeholder");
+    if (!headerContainer) return;
+
+    const currentPath = window.location.pathname.split("/").pop() || "index.html";
+
+    headerContainer.innerHTML = `
+      <div class="hairea-topbar">
+        <div class="container-fluid px-lg-5 d-flex justify-content-between align-items-center">
+          <div class="d-none d-md-flex align-items-center gap-3">
+            <span>✨ Complimentary Bespoke Sample with every ritual</span>
+            <span class="opacity-50">|</span>
+            <span>🌿 100% Bio-Identical Ingredients & Cruelty-Free</span>
+          </div>
+          <div class="d-flex align-items-center gap-3 ms-auto">
+            <!-- Currency Switcher -->
+            <div class="dropdown">
+              <button class="btn btn-sm text-light dropdown-toggle p-0 border-0" type="button" data-bs-toggle="dropdown">
+                ${this.currency} (${CURRENCIES[this.currency]?.symbol})
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end glass-card p-2">
+                <li><a class="dropdown-item py-1" href="#" onclick="App.setCurrency('USD')">USD ($)</a></li>
+                <li><a class="dropdown-item py-1" href="#" onclick="App.setCurrency('EUR')">EUR (€)</a></li>
+                <li><a class="dropdown-item py-1" href="#" onclick="App.setCurrency('GBP')">GBP (£)</a></li>
+                <li><a class="dropdown-item py-1" href="#" onclick="App.setCurrency('CAD')">CAD (CA$)</a></li>
+              </ul>
+            </div>
+            <span class="opacity-50">|</span>
+            <!-- RTL Toggle -->
+            <button class="btn btn-sm text-light p-0 border-0" onclick="App.toggleDirection()" title="Toggle RTL/LTR">
+              <i data-lucide="languages" style="width: 15px; height: 15px;"></i>
+            </button>
+            <span class="opacity-50">|</span>
+            <!-- Theme Toggle -->
+            <button id="themeToggleBtn" class="btn btn-sm text-light p-0 border-0" onclick="App.toggleTheme()" title="Toggle Dark/Light">
+              <i data-lucide="${this.theme === 'dark' ? 'sun' : 'moon'}" style="width: 15px; height: 15px;"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <header class="hairea-header">
+        <div class="container-fluid px-3 px-md-4 py-2 d-flex align-items-center justify-content-between">
+          <!-- LEFT: Brand Logo (Always on left, always clickable to Home) -->
+          <a href="index.html" class="brand-logo text-decoration-none" title="HAIRÉA Home">
+            HAIRÉA
+            <span>Cosmetics Atelier</span>
+          </a>
+
+          <!-- DESKTOP ONLY: Navigation Links (Strictly hidden on <= 1024px) -->
+          <nav class="hairea-desktop-nav align-items-center gap-1 mx-auto">
+            <a href="index.html" class="nav-link-editorial ${currentPath === 'index.html' || currentPath === '' ? 'active' : ''}">Home</a>
+            <a href="shop.html" class="nav-link-editorial ${currentPath === 'shop.html' ? 'active' : ''}">Shop All</a>
+            <a href="quiz.html" class="nav-link-editorial text-primary fw-bold ${currentPath === 'quiz.html' ? 'active' : ''}">
+              <span class="badge bg-warning text-dark me-1" style="font-size:0.58rem; letter-spacing:0.04em;">AI</span> Diagnostic Quiz
+            </a>
+            <a href="routines.html" class="nav-link-editorial ${currentPath === 'routines.html' ? 'active' : ''}">Routines</a>
+            <a href="transformations.html" class="nav-link-editorial ${currentPath === 'transformations.html' ? 'active' : ''}">Transformations</a>
+            <a href="reviews.html" class="nav-link-editorial ${currentPath === 'reviews.html' ? 'active' : ''}">Reviews</a>
+            <a href="subscriptions.html" class="nav-link-editorial ${currentPath === 'subscriptions.html' ? 'active' : ''}">Subscriptions</a>
+            
+            <!-- Atelier Editorial Dropdown -->
+            <div class="dropdown">
+              <a href="#" class="nav-link-editorial dropdown-toggle text-decoration-none" role="button" data-bs-toggle="dropdown">
+                Atelier ▾
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end glass-card p-2 shadow-luxe border">
+                <li><a class="dropdown-item py-2 small ${currentPath === 'journal.html' ? 'active' : ''}" href="journal.html">🔬 The Hair Journal</a></li>
+                <li><a class="dropdown-item py-2 small ${currentPath === 'about.html' ? 'active' : ''}" href="about.html">🌿 Brand Story & Lab</a></li>
+                <li><a class="dropdown-item py-2 small ${currentPath === 'contact.html' ? 'active' : ''}" href="contact.html">💬 Concierge & Help</a></li>
+              </ul>
+            </div>
+          </nav>
+
+          <!-- DESKTOP ONLY: Action Icons & Admin Pill (Strictly hidden on <= 1024px) -->
+          <div class="hairea-desktop-actions align-items-center gap-1 gap-sm-2 ms-2">
+            <!-- Search -->
+            <button class="nav-icon-btn" onclick="App.openSearchModal()" title="Search catalog">
+              <i data-lucide="search"></i>
+            </button>
+            <!-- Account -->
+            <a href="account.html" class="nav-icon-btn" title="My Account">
+              <i data-lucide="user"></i>
+            </a>
+            <!-- Wishlist -->
+            <a href="wishlist.html" class="nav-icon-btn position-relative" title="Wishlist">
+              <i data-lucide="heart"></i>
+              <span id="wishlistCountBadge" class="badge-count">0</span>
+            </a>
+            <!-- Cart Drawer Button -->
+            <button class="nav-icon-btn position-relative" onclick="App.openCartDrawer()" title="Cart">
+              <i data-lucide="shopping-bag"></i>
+              <span id="cartCountBadge" class="badge-count">0</span>
+            </button>
+            <!-- Admin Dashboard Portal -->
+            <a href="admin.html" class="btn btn-sm btn-hairea-outline py-1 px-2 ms-1" style="font-size: 0.7rem; white-space: nowrap;">
+              <i data-lucide="shield-check" style="width: 12px; height: 12px;"></i> Admin
+            </a>
+          </div>
+
+          <!-- RIGHT: Mobile/Tablet/1024px Hamburger Button (Strictly visible ONLY at <= 1024px) -->
+          <button class="hairea-hamburger-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenuDrawer" aria-label="Open Navigation Menu" title="Open Navigation Menu">
+            <i data-lucide="menu" style="width: 24px; height: 24px;"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Mobile / Tablet / 1024px Offcanvas Navigation Drawer -->
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="mobileMenuDrawer" style="max-width: 380px;">
+        <div class="offcanvas-header border-bottom py-3">
+          <a href="index.html" class="brand-logo text-decoration-none" data-bs-dismiss="offcanvas">
+            HAIRÉA
+            <span>Cosmetics Atelier</span>
+          </a>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        
+        <div class="offcanvas-body p-4 d-flex flex-column justify-content-between" style="overflow-y: auto;">
+          <div>
+            <!-- Quick Actions Grid (Search, Cart, Wishlist, Account) inside drawer -->
+            <div class="d-grid grid-cols-2 gap-2 mb-4">
+              <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-hairea-outline w-100 d-flex align-items-center justify-content-center gap-2" onclick="bootstrap.Offcanvas.getInstance(document.getElementById('mobileMenuDrawer')).hide(); App.openSearchModal();">
+                  <i data-lucide="search" style="width: 14px; height: 14px;"></i> Search
+                </button>
+                <button class="btn btn-sm btn-hairea-outline w-100 d-flex align-items-center justify-content-center gap-2" onclick="bootstrap.Offcanvas.getInstance(document.getElementById('mobileMenuDrawer')).hide(); App.openCartDrawer();">
+                  <i data-lucide="shopping-bag" style="width: 14px; height: 14px;"></i> Bag (<span id="mobileCartCount">0</span>)
+                </button>
+              </div>
+              <div class="d-flex gap-2 mt-2">
+                <a href="wishlist.html" class="btn btn-sm btn-hairea-outline w-100 d-flex align-items-center justify-content-center gap-2">
+                  <i data-lucide="heart" style="width: 14px; height: 14px;"></i> Wishlist (<span id="mobileWishCount">0</span>)
+                </a>
+                <a href="account.html" class="btn btn-sm btn-hairea-outline w-100 d-flex align-items-center justify-content-center gap-2">
+                  <i data-lucide="user" style="width: 14px; height: 14px;"></i> Account
+                </a>
+              </div>
+            </div>
+
+            <!-- Main Navigation Links List -->
+            <div class="d-flex flex-column gap-2 mb-4">
+              <a href="index.html" class="d-flex justify-content-between align-items-center py-2 px-3 rounded text-decoration-none ${currentPath === 'index.html' || currentPath === '' ? 'bg-secondary fw-bold text-dark' : 'text-secondary'}">
+                <span>01. Home</span>
+                <i data-lucide="chevron-right" style="width: 14px; height: 14px;" class="opacity-50"></i>
+              </a>
+              <a href="shop.html" class="d-flex justify-content-between align-items-center py-2 px-3 rounded text-decoration-none ${currentPath === 'shop.html' ? 'bg-secondary fw-bold text-dark' : 'text-secondary'}">
+                <span>02. Shop All Formulations</span>
+                <i data-lucide="chevron-right" style="width: 14px; height: 14px;" class="opacity-50"></i>
+              </a>
+              <a href="quiz.html" class="d-flex justify-content-between align-items-center py-2 px-3 rounded text-decoration-none bg-warning bg-opacity-25 text-dark fw-bold border border-warning">
+                <span>03. 🧬 Hair Diagnostic Quiz</span>
+                <span class="badge bg-warning text-dark" style="font-size: 0.6rem;">AI BESPOKE</span>
+              </a>
+              <a href="routines.html" class="d-flex justify-content-between align-items-center py-2 px-3 rounded text-decoration-none ${currentPath === 'routines.html' ? 'bg-secondary fw-bold text-dark' : 'text-secondary'}">
+                <span>04. Curated Hair Routines</span>
+                <i data-lucide="chevron-right" style="width: 14px; height: 14px;" class="opacity-50"></i>
+              </a>
+              <a href="transformations.html" class="d-flex justify-content-between align-items-center py-2 px-3 rounded text-decoration-none ${currentPath === 'transformations.html' ? 'bg-secondary fw-bold text-dark' : 'text-secondary'}">
+                <span>05. Transformations Gallery</span>
+                <i data-lucide="chevron-right" style="width: 14px; height: 14px;" class="opacity-50"></i>
+              </a>
+              <a href="reviews.html" class="d-flex justify-content-between align-items-center py-2 px-3 rounded text-decoration-none ${currentPath === 'reviews.html' ? 'bg-secondary fw-bold text-dark' : 'text-secondary'}">
+                <span>06. Verified Client Reviews</span>
+                <i data-lucide="chevron-right" style="width: 14px; height: 14px;" class="opacity-50"></i>
+              </a>
+              <a href="subscriptions.html" class="d-flex justify-content-between align-items-center py-2 px-3 rounded text-decoration-none ${currentPath === 'subscriptions.html' ? 'bg-secondary fw-bold text-dark' : 'text-secondary'}">
+                <span>07. Subscriptions Club</span>
+                <span class="badge bg-success text-white" style="font-size: 0.6rem;">20% OFF</span>
+              </a>
+              <a href="journal.html" class="d-flex justify-content-between align-items-center py-2 px-3 rounded text-decoration-none ${currentPath === 'journal.html' ? 'bg-secondary fw-bold text-dark' : 'text-secondary'}">
+                <span>08. The Hair Journal & Science</span>
+                <i data-lucide="chevron-right" style="width: 14px; height: 14px;" class="opacity-50"></i>
+              </a>
+              <a href="about.html" class="d-flex justify-content-between align-items-center py-2 px-3 rounded text-decoration-none ${currentPath === 'about.html' ? 'bg-secondary fw-bold text-dark' : 'text-secondary'}">
+                <span>09. Brand Story & Lab</span>
+                <i data-lucide="chevron-right" style="width: 14px; height: 14px;" class="opacity-50"></i>
+              </a>
+              <a href="contact.html" class="d-flex justify-content-between align-items-center py-2 px-3 rounded text-decoration-none ${currentPath === 'contact.html' ? 'bg-secondary fw-bold text-dark' : 'text-secondary'}">
+                <span>10. Concierge & Help</span>
+                <i data-lucide="chevron-right" style="width: 14px; height: 14px;" class="opacity-50"></i>
+              </a>
+              <a href="admin.html" class="d-flex justify-content-between align-items-center py-2 px-3 rounded text-decoration-none text-muted small">
+                <span>11. Studio Admin Dashboard</span>
+                <i data-lucide="shield-check" style="width: 14px; height: 14px;" class="opacity-50"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Bottom Drawer CTA & Preferences -->
+          <div class="pt-3 border-top">
+            <a href="quiz.html" class="btn btn-hairea-gold w-100 py-3 mb-3 font-serif fw-bold">
+              Start Hair Diagnostic Quiz →
+            </a>
+            <div class="d-flex justify-content-between align-items-center small text-muted">
+              <span>Theme & Direction:</span>
+              <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="App.toggleTheme()">
+                  ${this.theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
+                </button>
+                <button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="App.toggleDirection()">
+                  ${this.dir === 'rtl' ? 'LTR' : 'RTL'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    if (window.lucide) lucide.createIcons();
+
+    window.addEventListener("scroll", () => {
+      const h = document.querySelector(".hairea-header");
+      if (h) {
+        if (window.scrollY > 40) {
+          h.classList.add("scrolled");
+        } else {
+          h.classList.remove("scrolled");
+        }
+      }
+    });
+  },
+
+  // Footer Component Rendering — Strict 1-Row Layout
+  renderFooter() {
+    const footerContainer = document.getElementById("footer-placeholder");
+    if (!footerContainer) return;
+
+    footerContainer.innerHTML = `
+      <footer class="hairea-footer">
+        <div class="container-fluid px-lg-5">
+          <div class="row g-4 g-xl-5 mb-5 align-items-start">
+            <!-- 1. Brand & Newsletter (3 Cols) -->
+            <div class="col-xl-3 col-lg-3 col-md-6 col-12">
+              <h2 class="font-serif text-white mb-2" style="letter-spacing: 0.15em; font-size: 1.8rem;">HAIRÉA</h2>
+              <p class="text-muted mb-3" style="font-size: 0.86rem; line-height: 1.5;">
+                Where molecular trichology meets Parisian couture hair rituals. Bespoke formulas engineered to heal your strand genetics.
+              </p>
+              <div class="newsletter-box">
+                <span class="editorial-tag text-white mb-2" style="font-size: 0.65rem;">The Gazette</span>
+                <p class="small text-muted mb-2" style="font-size: 0.8rem;">Receive private diagnostic invites & 15% off.</p>
+                <form onsubmit="App.handleNewsletter(event)" class="d-flex gap-2">
+                  <input type="email" id="newsletterEmail" class="form-control form-control-sm bg-dark border-secondary text-white rounded-pill px-3" placeholder="Your email..." required style="font-size: 0.8rem;">
+                  <button type="submit" class="btn btn-sm btn-hairea-gold px-3 rounded-pill" style="font-size: 0.8rem;">Join</button>
+                </form>
+              </div>
+            </div>
+
+            <!-- 2. Discover Links (2 Cols) -->
+            <div class="col-xl-2 col-lg-2 col-md-3 col-6">
+              <h4 class="footer-heading" style="font-size: 1.15rem; margin-bottom: 14px;">Discover</h4>
+              <ul class="footer-links p-0 m-0">
+                <li><a href="shop.html">Shop All Formulas</a></li>
+                <li><a href="shop.html?category=Shampoo">Silk Cleansers</a></li>
+                <li><a href="shop.html?category=Conditioner">Lipid Melts</a></li>
+                <li><a href="shop.html?category=Treatment">Peptide Masks</a></li>
+                <li><a href="shop.html?category=Scalp+Care">Scalp Serums</a></li>
+                <li><a href="shop.html?category=Styling+%26+Oil">Glossing Oils</a></li>
+                <li><a href="subscriptions.html">Refill Subscriptions</a></li>
+              </ul>
+            </div>
+
+            <!-- 3. Diagnostic Links (2 Cols) -->
+            <div class="col-xl-2 col-lg-2 col-md-3 col-6">
+              <h4 class="footer-heading" style="font-size: 1.15rem; margin-bottom: 14px;">Diagnostic</h4>
+              <ul class="footer-links p-0 m-0">
+                <li><a href="quiz.html">Hair-Type Quiz</a></li>
+                <li><a href="routines.html">Curated Rituals</a></li>
+                <li><a href="transformations.html">Before / After Gallery</a></li>
+                <li><a href="reviews.html">Verified Reviews</a></li>
+                <li><a href="journal.html">Ingredient Library</a></li>
+                <li><a href="journal.html">Trichology Research</a></li>
+              </ul>
+            </div>
+
+            <!-- 4. Atelier Links (2 Cols) -->
+            <div class="col-xl-2 col-lg-2 col-md-3 col-6">
+              <h4 class="footer-heading" style="font-size: 1.15rem; margin-bottom: 14px;">Atelier</h4>
+              <ul class="footer-links p-0 m-0">
+                <li><a href="about.html">Our Formulation Lab</a></li>
+                <li><a href="about.html#sustainability">Ethical Sourcing</a></li>
+                <li><a href="contact.html">Salon Concierge</a></li>
+                <li><a href="contact.html#faq">FAQ & Shipping</a></li>
+                <li><a href="account.html">Customer Portal</a></li>
+                <li><a href="admin.html">Studio Admin</a></li>
+              </ul>
+            </div>
+
+            <!-- 5. Standards & Social Icons (3 Cols) -->
+            <div class="col-xl-3 col-lg-3 col-md-5 col-12">
+              <h4 class="footer-heading" style="font-size: 1.15rem; margin-bottom: 14px;">Standards & Atelier</h4>
+              <div class="d-flex flex-column gap-1 text-muted small mb-4" style="font-size: 0.8rem;">
+                <span>✦ 100% Sulfate-Free Formulas</span>
+                <span>✦ Zero Silicones or Phthalates</span>
+                <span>✦ Leaping Bunny Certified</span>
+                <span>✦ 100% Recycled Aluminum & Glass</span>
+              </div>
+              <div>
+                <span class="small text-uppercase fw-bold text-white d-block mb-2" style="letter-spacing: 0.1em; font-size: 0.72rem;">Connect With Us</span>
+                <div class="d-flex flex-wrap gap-2 text-white align-items-center">
+                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="Instagram" title="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                  </a>
+                  <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="Facebook" title="Facebook">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                  </a>
+                  <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="X (Twitter)" title="X (Twitter)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z"/><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"/></svg>
+                  </a>
+                  <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="YouTube" title="YouTube">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><polygon points="10 15 15 12 10 9 10 15"/></svg>
+                  </a>
+                  <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="LinkedIn" title="LinkedIn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="border-top border-secondary pt-4 d-flex flex-column flex-md-row justify-content-between align-items-center text-muted small gap-3">
+            <p class="mb-0">© 2026 HAIRÉA Cosmetics Atelier Inc. All rights reserved. "Know Your Hair. Love Your Ritual."</p>
+            <div class="d-flex gap-4">
+              <a href="#" class="text-muted">Privacy Policy</a>
+              <a href="#" class="text-muted">Terms of Service</a>
+              <a href="#" class="text-muted">Accessibility</a>
+              <a href="admin.html" class="text-muted">Admin Login</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    `;
+    if (window.lucide) lucide.createIcons();
+  },
+
+  // Cart Drawer
+  renderCartDrawer() {
+    let drawer = document.getElementById("cartDrawerContainer");
+    if (!drawer) {
+      drawer = document.createElement("div");
+      drawer.id = "cartDrawerContainer";
+      document.body.appendChild(drawer);
+    }
+
+    const cart = Storage.getCart();
+    const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const freeShippingThreshold = 75;
+    const progressPercent = Math.min(100, (subtotal / freeShippingThreshold) * 100);
+    const amountNeeded = (freeShippingThreshold - subtotal).toFixed(2);
+
+    drawer.innerHTML = `
+      <div class="cart-drawer-backdrop" id="cartBackdrop" onclick="App.closeCartDrawer()"></div>
+      <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-drawer-header">
+          <h4 class="font-serif m-0">Your Ritual Bag (${cart.length})</h4>
+          <button class="btn-close" onclick="App.closeCartDrawer()"></button>
+        </div>
+
+        <div class="free-shipping-progress">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>${subtotal >= freeShippingThreshold ? '🎉 Free Express Shipping Unlocked!' : `Add <strong>${this.formatPrice(amountNeeded)}</strong> more for <strong>Free Shipping</strong>`}</span>
+            <span class="small fw-bold">${Math.round(progressPercent)}%</span>
+          </div>
+          <div class="shipping-bar-track">
+            <div class="shipping-bar-fill" style="width: ${progressPercent}%"></div>
+          </div>
+        </div>
+
+        <div class="cart-drawer-body">
+          ${cart.length === 0 ? `
+            <div class="text-center py-5">
+              <i data-lucide="shopping-bag" class="w-12 h-12 text-muted mb-3 mx-auto opacity-50" style="width: 48px; height: 48px;"></i>
+              <h5 class="font-serif mb-2">Your Bag is Empty</h5>
+              <p class="text-muted small mb-4">Discover your personalized formula or browse bestselling hair rituals.</p>
+              <a href="quiz.html" class="btn btn-hairea-gold btn-sm mb-2 w-100" onclick="App.closeCartDrawer()">Take Hair Diagnostic</a>
+              <a href="shop.html" class="btn btn-hairea-outline btn-sm w-100" onclick="App.closeCartDrawer()">Shop Catalog</a>
+            </div>
+          ` : `
+            ${cart.map((item, idx) => `
+              <div class="cart-item-row">
+                <img src="${item.image}" alt="${item.name}" class="cart-item-thumb">
+                <div class="flex-grow-1">
+                  <div class="d-flex justify-content-between">
+                    <h6 class="font-serif mb-1">${item.name}</h6>
+                    <button class="btn btn-sm text-danger p-0 border-0" onclick="App.removeFromCart(${idx})" title="Remove item">
+                      <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                    </button>
+                  </div>
+                  <p class="small text-muted mb-2">${item.isSubscription ? `🔄 ${item.frequency || 'Subscription (Every 6 Wks)'}` : 'One-time purchase'}</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="qty-stepper">
+                      <button onclick="App.updateCartQty(${idx}, ${item.quantity - 1})">-</button>
+                      <span>${item.quantity}</span>
+                      <button onclick="App.updateCartQty(${idx}, ${item.quantity + 1})">+</button>
+                    </div>
+                    <span class="fw-bold">${this.formatPrice(item.price * item.quantity)}</span>
+                  </div>
+                </div>
+              </div>
+            `).join("")}
+          `}
+        </div>
+
+        ${cart.length > 0 ? `
+          <div class="cart-drawer-footer">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Subtotal</span>
+              <span class="fw-bold fs-5">${this.formatPrice(subtotal)}</span>
+            </div>
+            <p class="small text-muted mb-3">Taxes & shipping calculated at checkout. 30-day money-back guarantee.</p>
+            <button class="btn btn-hairea-gold w-100 mb-2 py-3" onclick="App.checkout()">
+              Proceed to Checkout • ${this.formatPrice(subtotal)}
+            </button>
+            <a href="shop.html" class="btn btn-hairea-outline w-100 btn-sm" onclick="App.closeCartDrawer()">
+              Continue Shopping
+            </a>
+          </div>
+        ` : ''}
+      </div>
+    `;
+    if (window.lucide) lucide.createIcons();
+  },
+
+  openCartDrawer() {
+    this.renderCartDrawer();
+    const backdrop = document.getElementById("cartBackdrop");
+    const drawer = document.getElementById("cartDrawer");
+    if (backdrop && drawer) {
+      backdrop.classList.add("show");
+      drawer.classList.add("show");
+    }
+  },
+
+  closeCartDrawer() {
+    const backdrop = document.getElementById("cartBackdrop");
+    const drawer = document.getElementById("cartDrawer");
+    if (backdrop && drawer) {
+      backdrop.classList.remove("show");
+      drawer.classList.remove("show");
+    }
+  },
+
+  addToCart(product, isSubscription = false, frequency = "Every 6 Weeks") {
+    const cart = Storage.getCart();
+    const finalPrice = isSubscription ? Number((product.price * 0.8).toFixed(2)) : Number(product.price);
+    
+    const existingIndex = cart.findIndex(i => i.id === product.id && i.isSubscription === isSubscription);
+    if (existingIndex > -1) {
+      cart[existingIndex].quantity += 1;
+    } else {
+      cart.push({
+        id: product.id,
+        name: product.name,
+        price: finalPrice,
+        image: product.image,
+        quantity: 1,
+        isSubscription: isSubscription,
+        frequency: frequency
+      });
+    }
+    Storage.setCart(cart);
+    this.updateBadges();
+    this.renderCartDrawer();
+    this.openCartDrawer();
+    this.toast(`Added ${product.name} to ritual bag!`);
+  },
+
+  updateCartQty(index, newQty) {
+    const cart = Storage.getCart();
+    if (newQty <= 0) {
+      cart.splice(index, 1);
+    } else {
+      cart[index].quantity = newQty;
+    }
+    Storage.setCart(cart);
+    this.renderCartDrawer();
+    this.updateBadges();
+  },
+
+  removeFromCart(index) {
+    const cart = Storage.getCart();
+    const removed = cart.splice(index, 1)[0];
+    Storage.setCart(cart);
+    this.renderCartDrawer();
+    this.updateBadges();
+    if (removed) this.toast(`Removed ${removed.name} from bag.`);
+  },
+
+  checkout() {
+    const cart = Storage.getCart();
+    if (cart.length === 0) return;
+
+    // Simulate order placement
+    const newOrder = {
+      id: `ORD-${Math.floor(10000 + Math.random() * 90000)}`,
+      date: "Just now",
+      items: cart,
+      total: cart.reduce((acc, i) => acc + i.price * i.quantity, 0),
+      status: "Processing",
+      tracking: "Pending dispatch",
+      destination: "New York, USA"
+    };
+
+    const orders = Storage.getOrders();
+    orders.unshift(newOrder);
+    Storage.setOrders(orders);
+
+    Storage.setCart([]);
+    this.closeCartDrawer();
+    this.updateBadges();
+    
+    alert(`🎉 Order ${newOrder.id} Placed Successfully!\n\nThank you for choosing HAIRÉA. A confirmation email with your bespoke formulation details has been sent.`);
+    window.location.href = "account.html";
+  },
+
+  // Wishlist
+  toggleWishlist(product) {
+    let wishlist = Storage.getWishlist();
+    const index = wishlist.findIndex(p => p.id === product.id);
+    if (index > -1) {
+      wishlist.splice(index, 1);
+      this.toast(`Removed ${product.name} from Wishlist`);
+    } else {
+      wishlist.push(product);
+      this.toast(`Saved ${product.name} to Wishlist!`);
+    }
+    Storage.setWishlist(wishlist);
+    this.updateBadges();
+    this.updateWishlistIcons();
+  },
+
+  updateWishlistIcons() {
+    const wishlist = Storage.getWishlist();
+    document.querySelectorAll("[data-wishlist-id]").forEach(btn => {
+      const id = btn.getAttribute("data-wishlist-id");
+      const isSaved = wishlist.some(p => p.id === id);
+      if (isSaved) {
+        btn.classList.add("active");
+        btn.innerHTML = `<i data-lucide="heart" fill="#E63946"></i>`;
+      } else {
+        btn.classList.remove("active");
+        btn.innerHTML = `<i data-lucide="heart"></i>`;
+      }
+    });
+    if (window.lucide) lucide.createIcons();
+  },
+
+  updateBadges() {
+    const cart = Storage.getCart();
+    const wishlist = Storage.getWishlist();
+    const cartTotalCount = cart.reduce((acc, item) => acc + item.quantity, 0);
+
+    const cartBadge = document.getElementById("cartCountBadge");
+    if (cartBadge) cartBadge.innerText = cartTotalCount;
+
+    const wishBadge = document.getElementById("wishlistCountBadge");
+    if (wishBadge) wishBadge.innerText = wishlist.length;
+
+    const mobileCart = document.getElementById("mobileCartCount");
+    if (mobileCart) mobileCart.innerText = cartTotalCount;
+
+    const mobileWish = document.getElementById("mobileWishCount");
+    if (mobileWish) mobileWish.innerText = wishlist.length;
+  },
+
+  // Live Search Modal
+  renderSearchModal() {
+    let modal = document.getElementById("searchModalContainer");
+    if (!modal) {
+      modal = document.createElement("div");
+      modal.id = "searchModalContainer";
+      document.body.appendChild(modal);
+    }
+
+    modal.innerHTML = `
+      <div class="modal fade" id="searchModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content glass-card border-0 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <span class="editorial-tag">Bespoke Catalog Search</span>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="position-relative mb-4">
+              <input type="text" id="globalSearchInput" class="form-control form-control-lg bg-light border-0 px-4 py-3 rounded-pill" placeholder="Search by hair concern, ingredient, product name (e.g., Frizz, Rosemary, Squalane)..." oninput="App.handleLiveSearch(this.value)">
+            </div>
+            
+            <div class="d-flex gap-2 flex-wrap mb-4">
+              <span class="small text-muted me-2">Trending:</span>
+              <button class="btn btn-sm btn-hairea-outline py-1 px-3" onclick="App.setSearchTerm('Sulfate-Free')">Sulfate-Free</button>
+              <button class="btn btn-sm btn-hairea-outline py-1 px-3" onclick="App.setSearchTerm('Curly')">Curly Hair</button>
+              <button class="btn btn-sm btn-hairea-outline py-1 px-3" onclick="App.setSearchTerm('Rosemary')">Rosemary Stem Cells</button>
+              <button class="btn btn-sm btn-hairea-outline py-1 px-3" onclick="App.setSearchTerm('Peptide')">Peptide Bond Repair</button>
+            </div>
+
+            <div id="searchResultsGrid" class="row g-3" style="max-height: 400px; overflow-y: auto;">
+              <!-- Results populated dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  },
+
+  openSearchModal() {
+    const modalEl = document.getElementById("searchModal");
+    if (modalEl && window.bootstrap) {
+      const bsModal = new bootstrap.Modal(modalEl);
+      bsModal.show();
+      setTimeout(() => {
+        document.getElementById("globalSearchInput")?.focus();
+        this.handleLiveSearch("");
+      }, 300);
+    }
+  },
+
+  setSearchTerm(term) {
+    const input = document.getElementById("globalSearchInput");
+    if (input) {
+      input.value = term;
+      this.handleLiveSearch(term);
+    }
+  },
+
+  handleLiveSearch(query) {
+    const container = document.getElementById("searchResultsGrid");
+    if (!container) return;
+    const products = Storage.getProducts();
+    const q = query.toLowerCase().trim();
+
+    const filtered = products.filter(p => 
+      !q ||
+      p.name.toLowerCase().includes(q) ||
+      p.category.toLowerCase().includes(q) ||
+      p.concerns.some(c => c.toLowerCase().includes(q)) ||
+      p.hairType.some(h => h.toLowerCase().includes(q)) ||
+      p.freeFrom.some(f => f.toLowerCase().includes(q)) ||
+      p.ingredientsKey.some(ing => ing.name.toLowerCase().includes(q))
+    );
+
+    if (filtered.length === 0) {
+      container.innerHTML = `
+        <div class="col-12 text-center py-4 text-muted">
+          <p>No formulations matched "<strong>${query}</strong>". Try searching for <em>Shampoo</em>, <em>Mask</em>, or <em>Rosemary</em>.</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = filtered.map(p => `
+      <div class="col-md-6">
+        <div class="d-flex align-items-center gap-3 p-2 rounded glass-card border">
+          <img src="${p.image}" alt="${p.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+          <div class="flex-grow-1">
+            <h6 class="font-serif mb-0"><a href="product.html?id=${p.id}">${p.name}</a></h6>
+            <span class="small text-muted">${p.category} • ${this.formatPrice(p.price)}</span>
+          </div>
+          <a href="product.html?id=${p.id}" class="btn btn-sm btn-hairea-dark px-3">View</a>
+        </div>
+      </div>
+    `).join("");
+  },
+
+  // Quick View Modal
+  renderQuickViewModal() {
+    let modal = document.getElementById("quickViewContainer");
+    if (!modal) {
+      modal = document.createElement("div");
+      modal.id = "quickViewContainer";
+      document.body.appendChild(modal);
+    }
+
+    modal.innerHTML = `
+      <div class="modal fade" id="quickViewModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content glass-card border-0 p-4" id="quickViewBody">
+            <!-- Populated on open -->
+          </div>
+        </div>
+      </div>
+    `;
+  },
+
+  openQuickView(productId) {
+    const products = Storage.getProducts();
+    const p = products.find(prod => prod.id === productId);
+    if (!p) return;
+
+    const modalBody = document.getElementById("quickViewBody");
+    if (!modalBody) return;
+
+    modalBody.innerHTML = `
+      <div class="row g-4 align-items-center">
+        <div class="col-md-6">
+          <div class="rounded-4 overflow-hidden shadow-sm">
+            <img src="${p.image}" alt="${p.name}" class="w-100 object-fit-cover" style="height: 380px;">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <span class="editorial-tag">${p.category}</span>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <h3 class="font-serif mb-1">${p.name}</h3>
+          <p class="text-muted small mb-2">${p.subtitle}</p>
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <span class="stars-rating">★★★★★</span>
+            <span class="small fw-bold">${p.rating}</span>
+            <span class="small text-muted">(${p.reviewsCount} reviews)</span>
+          </div>
+          <p class="small text-secondary mb-4">${p.description}</p>
+          
+          <div class="p-3 bg-light rounded-3 mb-4 border">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span class="fw-bold">One-Time Purchase:</span>
+              <span class="fw-bold fs-5">${this.formatPrice(p.price)}</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center text-success small">
+              <span>Subscribe & Save (20% Off):</span>
+              <span class="fw-bold">${this.formatPrice(p.price * 0.8)} / delivery</span>
+            </div>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button class="btn btn-hairea-gold flex-grow-1" onclick="App.addToCartById('${p.id}', false); bootstrap.Modal.getInstance(document.getElementById('quickViewModal')).hide();">
+              Add to Bag • ${this.formatPrice(p.price)}
+            </button>
+            <a href="product.html?id=${p.id}" class="btn btn-hairea-outline">Full Details</a>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const modalEl = document.getElementById("quickViewModal");
+    if (modalEl && window.bootstrap) {
+      const bsModal = new bootstrap.Modal(modalEl);
+      bsModal.show();
+    }
+  },
+
+  addToCartById(id, isSub = false) {
+    const products = Storage.getProducts();
+    const p = products.find(prod => prod.id === id);
+    if (p) this.addToCart(p, isSub);
+  },
+
+  // Auth Modal
+  renderAuthModal() {
+    let modal = document.getElementById("authModalContainer");
+    if (!modal) {
+      modal = document.createElement("div");
+      modal.id = "authModalContainer";
+      document.body.appendChild(modal);
+    }
+
+    modal.innerHTML = `
+      <div class="modal fade" id="authModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content glass-card border-0 p-4 p-md-5">
+            <div class="d-flex justify-content-end mb-2">
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            
+            <!-- Centered Clickable Brand Logo -->
+            <div class="text-center mb-4">
+              <a href="index.html" class="brand-logo text-decoration-none d-inline-flex flex-column align-items-center mb-2" title="Navigate to Home">
+                HAIRÉA
+                <span>Cosmetics Atelier</span>
+              </a>
+              <p class="small text-muted mb-0">Atelier Privé Customer Portal</p>
+            </div>
+
+            <ul class="nav nav-pills nav-fill mb-4 p-1 bg-secondary rounded-pill" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active rounded-pill text-uppercase small" data-bs-toggle="pill" data-bs-target="#loginTab">Login</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link rounded-pill text-uppercase small" data-bs-toggle="pill" data-bs-target="#registerTab">Register</button>
+              </li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="loginTab">
+                <form onsubmit="App.handleLogin(event)">
+                  <div class="mb-3">
+                    <label class="form-label small text-muted">Email Address</label>
+                    <input type="email" id="loginEmail" class="form-control rounded-pill px-3" value="genevieve.moreau@editorial.com" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label small text-muted">Password</label>
+                    <input type="password" id="loginPass" class="form-control rounded-pill px-3" value="password123" required>
+                  </div>
+                  <button type="submit" class="btn btn-hairea-gold w-100 mb-3">Enter Atelier</button>
+                  <div class="text-center">
+                    <a href="admin.html" class="small text-muted">Are you a Salon Administrator? Access Studio Admin →</a>
+                  </div>
+                </form>
+              </div>
+              <div class="tab-pane fade" id="registerTab">
+                <form onsubmit="App.handleRegister(event)">
+                  <div class="mb-3">
+                    <label class="form-label small text-muted">Full Name</label>
+                    <input type="text" id="regName" class="form-control rounded-pill px-3" placeholder="e.g. Elena Rostova" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label small text-muted">Email Address</label>
+                    <input type="email" id="regEmail" class="form-control rounded-pill px-3" placeholder="name@domain.com" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label small text-muted">Create Password</label>
+                    <input type="password" id="regPass" class="form-control rounded-pill px-3" required>
+                  </div>
+                  <button type="submit" class="btn btn-hairea-gold w-100">Create Private Account</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  },
+
+  handleLogin(e) {
+    e.preventDefault();
+    this.toast("Welcome back to HAIRÉA Atelier!");
+    setTimeout(() => {
+      window.location.href = "account.html";
+    }, 600);
+  },
+
+  handleRegister(e) {
+    e.preventDefault();
+    const name = document.getElementById("regName").value;
+    const email = document.getElementById("regEmail").value;
+    Storage.setUser({
+      name: name,
+      email: email,
+      tier: "Silver Atelier Member",
+      points: 100,
+      hairProfile: "Complete diagnostic to customize",
+      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
+    });
+    this.toast("Account created! 100 Loyalty Points credited.");
+    setTimeout(() => {
+      window.location.href = "account.html";
+    }, 600);
+  },
+
+  handleNewsletter(e) {
+    e.preventDefault();
+    const email = document.getElementById("newsletterEmail").value;
+    this.toast(`Welcome to the Gazette! Promo code RITUAL15 sent to ${email}`);
+    document.getElementById("newsletterEmail").value = "";
+  },
+
+  initComparisonSliders() {
+    document.querySelectorAll(".comparison-container").forEach(container => {
+      const handle = container.querySelector(".comparison-slider-handle");
+      const afterImg = container.querySelector(".comparison-image-after");
+      if (!handle || !afterImg) return;
+
+      let isDragging = false;
+
+      const move = (e) => {
+        if (!isDragging) return;
+        const rect = container.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        let x = clientX - rect.left;
+        x = Math.max(0, Math.min(x, rect.width));
+        const percent = (x / rect.width) * 100;
+        handle.style.left = `${percent}%`;
+        afterImg.style.clipPath = `inset(0 0 0 ${percent}%)`;
+      };
+
+      const start = () => { isDragging = true; };
+      const stop = () => { isDragging = false; };
+
+      handle.addEventListener("mousedown", start);
+      window.addEventListener("mouseup", stop);
+      window.addEventListener("mousemove", move);
+
+      handle.addEventListener("touchstart", start);
+      window.addEventListener("touchend", stop);
+      window.addEventListener("touchmove", move);
+    });
+  },
+
+  initEventListeners() {
+    this.updateWishlistIcons();
+    this.updateBadges();
+    try {
+      if (window.AOS) AOS.init({ duration: 800, once: true });
+    } catch(err) {
+      console.warn("AOS init notice:", err);
+    }
+  }
+};
+
+// Initialize globally on load
+window.App = App;
+window.addEventListener("DOMContentLoaded", () => App.init());

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Authentication — HAIRÉA Atelier</title>
+  <meta name="description" content="Sign in or create your private customer account at HAIRÉA to manage custom formulas, subscriptions, and orders.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="alternate icon" href="favicon.svg">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <section class="py-5" style="min-height: 80vh; display: flex; align-items: center;">
+    <div class="container-fluid px-lg-5">
+      <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-5">
+          <div class="glass-card p-4 p-md-5 shadow-luxe" data-aos="fade-up">
+            
+            <!-- Centered Clickable Brand Logo -->
+            <div class="text-center mb-4">
+              <a href="index.html" class="brand-logo text-decoration-none d-inline-flex flex-column align-items-center mb-2" title="Return to Home">
+                HAIRÉA
+                <span>Cosmetics Atelier</span>
+              </a>
+              <span class="editorial-tag d-block mt-1">Atelier Privé</span>
+              <h3 class="font-serif mt-2 mb-1">Customer Portal</h3>
+              <p class="text-muted small mb-0">Access your bespoke hair diagnostic profile & subscriptions</p>
+            </div>
+
+            <!-- Tabs -->
+            <ul class="nav nav-pills nav-fill mb-4 p-1 bg-secondary rounded-pill" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active rounded-pill text-uppercase small" data-bs-toggle="pill" data-bs-target="#loginTab">Sign In</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link rounded-pill text-uppercase small" data-bs-toggle="pill" data-bs-target="#registerTab">Register</button>
+              </li>
+            </ul>
+
+            <div class="tab-content">
+              <!-- Login Tab -->
+              <div class="tab-pane fade show active" id="loginTab">
+                <form onsubmit="handleAuthLogin(event)">
+                  <div class="mb-3">
+                    <label class="form-label small text-muted">Email Address</label>
+                    <input type="email" id="authEmail" class="form-control rounded-pill px-3" value="genevieve.moreau@editorial.com" required>
+                  </div>
+                  <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                      <label class="form-label small text-muted">Password</label>
+                      <a href="#" class="small text-muted" onclick="App.toast('Password reset link sent to demo email!')">Forgot?</a>
+                    </div>
+                    <input type="password" id="authPass" class="form-control rounded-pill px-3" value="password123" required>
+                  </div>
+                  <button type="submit" class="btn btn-hairea-gold w-100 py-3 mb-3">
+                    Sign In to Atelier
+                  </button>
+                </form>
+              </div>
+
+              <!-- Register Tab -->
+              <div class="tab-pane fade" id="registerTab">
+                <form onsubmit="handleAuthRegister(event)">
+                  <div class="mb-3">
+                    <label class="form-label small text-muted">Full Name</label>
+                    <input type="text" id="regFullName" class="form-control rounded-pill px-3" placeholder="Elena Rostova" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label small text-muted">Email Address</label>
+                    <input type="email" id="regEmailField" class="form-control rounded-pill px-3" placeholder="elena@paris.com" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label small text-muted">Create Password</label>
+                    <input type="password" id="regPasswordField" class="form-control rounded-pill px-3" required>
+                  </div>
+                  <button type="submit" class="btn btn-hairea-gold w-100 py-3 mb-3">
+                    Create Account (+100 Points)
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <div class="border-top pt-3 text-center">
+              <a href="admin.html" class="small text-muted">Are you a Salon Administrator? Access Studio Admin →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    function handleAuthLogin(e) {
+      e.preventDefault();
+      App.toast("Welcome back, Genevieve!");
+      setTimeout(() => window.location.href = "account.html", 500);
+    }
+
+    function handleAuthRegister(e) {
+      e.preventDefault();
+      const name = document.getElementById("regFullName").value;
+      const email = document.getElementById("regEmailField").value;
+      Storage.setUser({
+        name: name,
+        email: email,
+        tier: "Silver Atelier Member",
+        points: 100,
+        hairProfile: "Complete diagnostic to customize",
+        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
+      });
+      App.toast("Account registered! 100 Reward Points earned.");
+      setTimeout(() => window.location.href = "account.html", 500);
+    }
+  </script>
+</body>
+</html>

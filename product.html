@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details — HAIRÉA Cosmetics Atelier</title>
+  <meta name="description" content="Explore luxury bio-identical hair formulations, botanical ingredients, clinical trials, and customer reviews.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="alternate icon" href="favicon.svg">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <!-- Dynamic Product Details Section -->
+  <section class="py-5" id="productDetailSection">
+    <div class="container-fluid px-lg-5">
+      <!-- Breadcrumbs -->
+      <nav class="mb-4 small text-muted">
+        <a href="index.html">Home</a> / <a href="shop.html">Shop All</a> / <span id="breadCat" class="text-dark">Shampoo</span> / <span id="breadTitle" class="fw-bold text-dark">Botanical Silk Cleanser</span>
+      </nav>
+
+      <div class="row g-5">
+        <!-- Product Gallery -->
+        <div class="col-lg-6">
+          <div class="sticky-top" style="top: 100px;">
+            <div class="product-main-gallery-box shadow-luxe mb-3 position-relative">
+              <img id="mainProductImg" src="IMAGE/Product.jpg" alt="Product">
+              <span id="productBadgeTag" class="product-badge-pill">Bestseller</span>
+            </div>
+            <!-- Thumbnails -->
+            <div class="d-flex gap-3 overflow-x-auto pb-2" id="galleryThumbnailsContainer">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Purchase Information -->
+        <div class="col-lg-6">
+          <span class="editorial-tag" id="prodCatTag">Shampoo</span>
+          <h1 class="editorial-heading-md mt-1 mb-2" id="prodName">Botanical Silk Cleanser</h1>
+          <p class="text-secondary lead fs-6 mb-3" id="prodSubtitle">Gentle Restorative Shampoo with Fermented Camellia & Bio-Silk</p>
+
+          <!-- Reviews Rating Summary -->
+          <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+            <span class="stars-rating" id="prodStars">★★★★★</span>
+            <span class="fw-bold" id="prodRatingScore">4.9 / 5.0</span>
+            <span class="text-muted small" id="prodReviewsSummary">(342 Verified Customer Reviews)</span>
+          </div>
+
+          <!-- Description -->
+          <p class="text-secondary mb-4" id="prodDescription">
+            A decadent, sulfate-free foaming ritual infused with Fermented Camellia Seed Oil, French Meadowfoam, and Bio-Hydrolized Silk. Gently lifts impurities while restoring the hair cuticle's lipid barrier without stripping natural oils.
+          </p>
+
+          <!-- Free-From & Clean Highlights -->
+          <div class="d-flex flex-wrap gap-2 mb-4" id="prodFreeFromBadges">
+            <span class="badge bg-secondary text-dark p-2">✦ Sulfate-Free</span>
+            <span class="badge bg-secondary text-dark p-2">✦ Silicone-Free</span>
+            <span class="badge bg-secondary text-dark p-2">✦ Paraben-Free</span>
+            <span class="badge bg-secondary text-dark p-2">✦ 100% Vegan</span>
+          </div>
+
+          <!-- Scent Customization -->
+          <div class="mb-4">
+            <label class="form-label small fw-bold text-uppercase" style="letter-spacing: 0.1em;">Select Signature Aroma</label>
+            <select class="form-select bg-light rounded-pill px-3" id="productScentSelect">
+              <option value="Sandalwood & White Jasmine">Sandalwood & White Jasmine (Warm, Creamy, Grounding)</option>
+              <option value="Vanilla Bourbon & Rose Water">Vanilla Bourbon & Rose Water (Sweet Damask Floral)</option>
+              <option value="Crushed Eucalyptus & Herbaceous Mint">Crushed Eucalyptus & Mint (Crisp Spa Purifier)</option>
+              <option value="Fragrance-Free">Fragrance-Free (Pure Hypoallergenic)</option>
+            </select>
+          </div>
+
+          <!-- Purchase Type: One-Time vs Subscribe & Save -->
+          <div class="p-4 glass-card mb-4">
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="radio" name="purchaseType" id="typeOneTime" value="onetime" checked onchange="ProductPage.togglePurchaseType()">
+              <label class="form-check-label d-flex justify-content-between w-100" for="typeOneTime">
+                <span class="fw-bold">One-Time Purchase</span>
+                <span class="fw-bold" id="priceOneTimeDisplay">$36.00</span>
+              </label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="purchaseType" id="typeSubscribe" value="subscribe" onchange="ProductPage.togglePurchaseType()">
+              <label class="form-check-label d-flex justify-content-between w-100" for="typeSubscribe">
+                <div>
+                  <span class="fw-bold text-success">Subscribe & Save 20%</span>
+                  <span class="d-block small text-muted">Includes complimentary travel minis + free delivery</span>
+                </div>
+                <span class="fw-bold text-success" id="priceSubscribeDisplay">$28.80</span>
+              </label>
+            </div>
+
+            <!-- Subscription Frequency Selector (Hidden by default) -->
+            <div class="mt-3 pt-3 border-top d-none" id="subFrequencyBox">
+              <label class="small text-muted mb-1">Delivery Frequency:</label>
+              <select class="form-select form-select-sm rounded-pill" id="subFrequencySelect">
+                <option value="Every 4 Weeks">Deliver Every 4 Weeks</option>
+                <option value="Every 6 Weeks" selected>Deliver Every 6 Weeks (Recommended)</option>
+                <option value="Every 8 Weeks">Deliver Every 8 Weeks</option>
+                <option value="Every 12 Weeks">Deliver Every 12 Weeks</option>
+              </select>
+              <span class="small text-muted d-block mt-2">✨ Pause, modify, or cancel anytime with one click in your account.</span>
+            </div>
+          </div>
+
+          <!-- Add to Cart & Wishlist Actions -->
+          <div class="d-flex gap-3 mb-5">
+            <button class="btn btn-hairea-gold flex-grow-1 py-3" onclick="ProductPage.handleAddToCart()">
+              <i data-lucide="shopping-bag"></i> Add to Ritual Bag
+            </button>
+            <button class="btn btn-hairea-outline px-4" id="prodWishlistBtn" onclick="ProductPage.handleToggleWishlist()" title="Save to wishlist">
+              <i data-lucide="heart"></i>
+            </button>
+          </div>
+
+          <!-- Compatibility Radar Summary -->
+          <div class="p-4 bg-secondary rounded-4 mb-4">
+            <h5 class="font-serif mb-3">Strand Compatibility Matrix</h5>
+            <div class="row g-3 small">
+              <div class="col-6">
+                <span class="text-muted d-block">Ideal Hair Types:</span>
+                <strong id="compatHairTypes">Straight, Wavy, Curly, Coily</strong>
+              </div>
+              <div class="col-6">
+                <span class="text-muted d-block">Scalp Compatibility:</span>
+                <strong id="compatScalpTypes">Dry, Normal, Sensitive</strong>
+              </div>
+              <div class="col-12 mt-2">
+                <span class="text-muted d-block">Clinical Trial Findings:</span>
+                <em id="clinicalStats">97% reported softer, silkier strands after 1 wash. 94% observed reduced scalp redness in 14 days.</em>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Key Ingredients Accordion & Macro Breakdown -->
+      <div class="row mt-5 pt-5 border-top">
+        <div class="col-lg-5">
+          <span class="editorial-tag">Active Trichology</span>
+          <h2 class="editorial-heading-md mt-1 mb-3">Key Botanical Actives</h2>
+          <p class="text-muted">
+            We reject cheap chemical fillers. Every single active ingredient is cold-processed and ethically sourced from accredited global sustainable farms.
+          </p>
+        </div>
+        <div class="col-lg-7" id="keyIngredientsList">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+
+      <!-- Related Recommended Routine Bundle -->
+      <div class="mt-5 pt-5 border-top">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <span class="editorial-tag">Synergistic Ritual</span>
+            <h3 class="font-serif mb-0">Frequently Paired Formulations</h3>
+          </div>
+          <a href="routines.html" class="fw-bold" style="color: var(--accent-champagne-dark);">Explore Full Routines →</a>
+        </div>
+        <div class="row g-4" id="relatedProductsRow">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    const ProductPage = {
+      product: null,
+
+      init() {
+        const params = new URLSearchParams(window.location.search);
+        const productId = params.get("id") || "hrea-01";
+        const products = Storage.getProducts();
+        this.product = products.find(p => p.id === productId) || products[0];
+
+        this.render();
+      },
+
+      render() {
+        const p = this.product;
+        if (!p) return;
+
+        document.title = `${p.name} — HAIRÉA Atelier`;
+        document.getElementById("breadCat").innerText = p.category;
+        document.getElementById("breadTitle").innerText = p.name;
+        document.getElementById("prodCatTag").innerText = p.category;
+        document.getElementById("prodName").innerText = p.name;
+        document.getElementById("prodSubtitle").innerText = p.subtitle;
+        document.getElementById("prodStars").innerText = "★".repeat(Math.round(p.rating));
+        document.getElementById("prodRatingScore").innerText = `${p.rating} / 5.0`;
+        document.getElementById("prodReviewsSummary").innerText = `(${p.reviewsCount} Verified Customer Reviews)`;
+        document.getElementById("prodDescription").innerText = p.description;
+        document.getElementById("productBadgeTag").innerText = p.badge;
+
+        document.getElementById("mainProductImg").src = p.image;
+        document.getElementById("priceOneTimeDisplay").innerText = App.formatPrice(p.price);
+        document.getElementById("priceSubscribeDisplay").innerText = `${App.formatPrice(p.price * 0.8)} / delivery`;
+
+        document.getElementById("compatHairTypes").innerText = p.hairType.join(", ");
+        document.getElementById("compatScalpTypes").innerText = p.scalpType.join(", ");
+        document.getElementById("clinicalStats").innerText = p.clinicalResults || "Clinically proven to repair cuticles in 14 days.";
+
+        // Render Thumbnails
+        const thumbContainer = document.getElementById("galleryThumbnailsContainer");
+        if (thumbContainer) {
+          thumbContainer.innerHTML = p.gallery.map((imgSrc, idx) => `
+            <img src="${imgSrc}" alt="${p.name} thumb ${idx+1}" class="gallery-thumb-item ${idx === 0 ? 'active' : ''}" onclick="document.getElementById('mainProductImg').src = '${imgSrc}'; document.querySelectorAll('.gallery-thumb-item').forEach(el => el.classList.remove('active')); this.classList.add('active');">
+          `).join("");
+        }
+
+        // Render Free-from badges
+        const badgesContainer = document.getElementById("prodFreeFromBadges");
+        if (badgesContainer) {
+          badgesContainer.innerHTML = p.freeFrom.map(f => `<span class="badge bg-secondary text-dark p-2">✦ ${f}</span>`).join("");
+        }
+
+        // Render Key Ingredients
+        const ingContainer = document.getElementById("keyIngredientsList");
+        if (ingContainer) {
+          ingContainer.innerHTML = p.ingredientsKey.map(ing => `
+            <div class="glass-card p-4 mb-3 border">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <h5 class="font-serif mb-0">${ing.name}</h5>
+                <span class="small text-muted font-monospace">${ing.origin}</span>
+              </div>
+              <p class="small text-secondary mb-0">Role: <strong>${ing.role}</strong></p>
+            </div>
+          `).join("");
+        }
+
+        // Render Related Products
+        const related = Storage.getProducts().filter(x => x.id !== p.id).slice(0, 3);
+        const relatedRow = document.getElementById("relatedProductsRow");
+        if (relatedRow) {
+          relatedRow.innerHTML = related.map(rel => `
+            <div class="col-md-4">
+              <div class="d-flex flex-column align-items-center text-center p-3 bg-white rounded-3 border h-100">
+                <img src="${rel.image}" alt="${rel.name}" class="mb-2" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
+                <span class="editorial-tag mx-auto mb-1" style="font-size: 0.65rem;">${rel.category}</span>
+                <h6 class="font-serif mb-1 text-center"><a href="product.html?id=${rel.id}">${rel.name}</a></h6>
+                <span class="small fw-bold mb-2">${App.formatPrice(rel.price)}</span>
+                <button class="btn btn-sm btn-hairea-dark mt-auto px-3" onclick="App.addToCartById('${rel.id}', false)">Add to Bag</button>
+              </div>
+            </div>
+          `).join("");
+        }
+
+        if (window.lucide) lucide.createIcons();
+      },
+
+      togglePurchaseType() {
+        const isSub = document.getElementById("typeSubscribe").checked;
+        const subBox = document.getElementById("subFrequencyBox");
+        if (isSub) {
+          subBox.classList.remove("d-none");
+        } else {
+          subBox.classList.add("d-none");
+        }
+      },
+
+      handleAddToCart() {
+        const isSub = document.getElementById("typeSubscribe").checked;
+        const freq = document.getElementById("subFrequencySelect").value;
+        App.addToCart(this.product, isSub, freq);
+      },
+
+      handleToggleWishlist() {
+        App.toggleWishlist(this.product);
+      }
+    };
+
+    document.addEventListener("DOMContentLoaded", () => ProductPage.init());
+  </script>
+</body>
+</html>

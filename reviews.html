@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Reviews & Praise Gallery — HAIRÉA Atelier</title>
+  <meta name="description" content="Read authentic customer reviews, photos, and ratings for HAIRÉA clean hair care products filtered by hair pattern and scalp type.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="alternate icon" href="favicon.svg">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <!-- Reviews Banner & Rating Summary -->
+  <section class="py-5 bg-secondary border-bottom">
+    <div class="container-fluid px-lg-5 py-3">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-6">
+          <span class="editorial-tag">Client Community Experience</span>
+          <h1 class="editorial-heading-lg mt-2 mb-3">Reviews & Praise</h1>
+          <p class="text-secondary lead">
+            Over 940+ verified client testimonials from Paris, London, New York, and Tokyo praising our bio-identical formulas.
+          </p>
+        </div>
+        <div class="col-lg-6">
+          <div class="glass-card p-4 p-md-5 d-flex flex-column flex-sm-row align-items-center justify-content-between gap-4">
+            <div class="text-center text-sm-start">
+              <div class="font-serif display-4 fw-bold mb-0">4.94</div>
+              <div class="stars-rating fs-5 mb-1">★★★★★</div>
+              <span class="small text-muted">Overall Atelier Satisfaction</span>
+            </div>
+            <div class="border-start ps-4 d-none d-sm-block">
+              <div class="small mb-1 d-flex justify-content-between gap-4"><span>5 Stars</span> <strong class="text-warning">92%</strong></div>
+              <div class="small mb-1 d-flex justify-content-between gap-4"><span>4 Stars</span> <strong>7%</strong></div>
+              <div class="small mb-1 d-flex justify-content-between gap-4"><span>3 Stars</span> <strong>1%</strong></div>
+              <div class="small d-flex justify-content-between gap-4"><span>1-2 Stars</span> <strong>0%</strong></div>
+            </div>
+            <button class="btn btn-hairea-gold py-3 px-4" onclick="openWriteReviewModal()">
+              Write a Review
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter & Reviews Grid -->
+  <section class="py-5">
+    <div class="container-fluid px-lg-5">
+      <!-- Filter Controls -->
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-5 p-3 glass-card">
+        <div class="d-flex flex-wrap gap-2">
+          <button class="btn btn-sm btn-hairea-dark rounded-pill px-3" onclick="filterReviews('All')">All Reviews</button>
+          <button class="btn btn-sm btn-hairea-outline rounded-pill px-3" onclick="filterReviews('Curly')">Curly / Wavy</button>
+          <button class="btn btn-sm btn-hairea-outline rounded-pill px-3" onclick="filterReviews('Damaged')">Color / Bleach</button>
+          <button class="btn btn-sm btn-hairea-outline rounded-pill px-3" onclick="filterReviews('Scalp')">Scalp Care</button>
+        </div>
+        <span class="small text-muted" id="reviewsCountBadge">Showing 5 Verified Reviews</span>
+      </div>
+
+      <!-- Reviews Grid -->
+      <div class="row g-4" id="reviewsGridContainer">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Write Review Modal -->
+  <div class="modal fade" id="writeReviewModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content glass-card border-0 p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="editorial-tag">Share Your Experience</span>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form onsubmit="handleReviewSubmit(event)">
+          <div class="mb-3">
+            <label class="form-label small text-muted">Your Name</label>
+            <input type="text" id="revAuthor" class="form-control rounded-pill px-3" placeholder="e.g. Genevieve Moreau" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small text-muted">Product Evaluated</label>
+            <select class="form-select rounded-pill px-3" id="revProductSelect">
+              <option value="Botanical Silk Cleanser">Botanical Silk Cleanser</option>
+              <option value="Lipid Velvet Moisture Melt">Lipid Velvet Moisture Melt</option>
+              <option value="Peptide Bond Elixir Mask">Peptide Bond Elixir Mask</option>
+              <option value="Golden Nectar Scalp Serum">Golden Nectar Scalp Serum</option>
+              <option value="Luminous Glass Glossing Oil">Luminous Glass Glossing Oil</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small text-muted">Your Hair Pattern</label>
+            <input type="text" id="revHairType" class="form-control rounded-pill px-3" placeholder="e.g. Type 3B Curly / Dry Scalp" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small text-muted">Star Rating</label>
+            <select class="form-select rounded-pill px-3" id="revStarsSelect">
+              <option value="5">★★★★★ (5/5 Exceptional)</option>
+              <option value="4">★★★★☆ (4/5 Very Good)</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small text-muted">Review Headline</label>
+            <input type="text" id="revTitle" class="form-control rounded-pill px-3" placeholder="e.g. Resurrected my dry bleached strands" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small text-muted">Your Testimonial</label>
+            <textarea id="revContent" class="form-control rounded-4 p-3" rows="3" placeholder="Describe the change in your strand texture, softness, and scalp health..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-hairea-gold w-100 py-3">Publish Verified Review</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    let reviewFilter = 'All';
+
+    function filterReviews(filter) {
+      reviewFilter = filter;
+      renderReviews();
+    }
+
+    function renderReviews() {
+      const container = document.getElementById("reviewsGridContainer");
+      if (!container) return;
+
+      let list = Storage.getReviews();
+      if (reviewFilter === 'Curly') {
+        list = list.filter(r => r.hairType.toLowerCase().includes("curly") || r.hairType.toLowerCase().includes("wavy"));
+      } else if (reviewFilter === 'Damaged') {
+        list = list.filter(r => r.hairType.toLowerCase().includes("bleach") || r.hairType.toLowerCase().includes("color"));
+      } else if (reviewFilter === 'Scalp') {
+        list = list.filter(r => r.productName.toLowerCase().includes("scalp") || r.hairType.toLowerCase().includes("scalp"));
+      }
+
+      document.getElementById("reviewsCountBadge").innerText = `Showing ${list.length} Verified Reviews`;
+
+      container.innerHTML = list.map(r => `
+        <div class="col-lg-4 col-md-6" data-aos="fade-up">
+          <div class="glass-card p-4 h-100 d-flex flex-column text-center align-items-center">
+            <div class="d-flex flex-column align-items-center mb-3">
+              <img src="${r.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'}" class="review-avatar mb-2" alt="${r.author}">
+              <h6 class="font-serif mb-0">${r.author}</h6>
+              <span class="small text-muted mb-1">${r.hairType}</span>
+              <span class="verified-badge"><i data-lucide="check-circle" style="width: 14px; height: 14px;"></i> Verified Client</span>
+            </div>
+
+            <div class="stars-rating mb-2">${"★".repeat(r.rating)}</div>
+            <h5 class="font-serif mb-2 text-center">"${r.title}"</h5>
+            <p class="small text-secondary mb-4 flex-grow-1 text-center" style="max-width: 90%;">${r.content}</p>
+
+            ${r.image ? `
+              <div class="mb-3 text-center">
+                <img src="${r.image}" alt="Product Photo" class="review-photo-thumb mx-auto">
+              </div>
+            ` : ''}
+
+            <div class="border-top pt-3 w-100 d-flex justify-content-between align-items-center small text-muted mt-auto">
+              <span>Formula: <strong>${r.productName}</strong></span>
+              <button class="btn btn-sm btn-link text-muted p-0 text-decoration-none" onclick="App.toast('Thank you for voting this review helpful!')">
+                👍 Helpful (${r.helpfulCount || 12})
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join("");
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function openWriteReviewModal() {
+      const modalEl = document.getElementById("writeReviewModal");
+      if (modalEl && window.bootstrap) {
+        new bootstrap.Modal(modalEl).show();
+      }
+    }
+
+    function handleReviewSubmit(e) {
+      e.preventDefault();
+      const author = document.getElementById("revAuthor").value;
+      const product = document.getElementById("revProductSelect").value;
+      const hairType = document.getElementById("revHairType").value;
+      const rating = parseInt(document.getElementById("revStarsSelect").value);
+      const title = document.getElementById("revTitle").value;
+      const content = document.getElementById("revContent").value;
+
+      const newReview = {
+        id: `rev-${Date.now()}`,
+        author: author,
+        avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80",
+        hairType: hairType,
+        scalpType: "Normal",
+        rating: rating,
+        date: "Just now",
+        verified: true,
+        productName: product,
+        title: title,
+        content: content,
+        helpfulCount: 1,
+        image: "IMAGE/Product.jpg"
+      };
+
+      const list = Storage.getReviews();
+      list.unshift(newReview);
+      Storage.setReviews(list);
+
+      bootstrap.Modal.getInstance(document.getElementById("writeReviewModal")).hide();
+      renderReviews();
+      App.toast("Review submitted and verified successfully!");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => renderReviews());
+  </script>
+</body>
+</html>

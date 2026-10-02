@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saved Formulations & Wishlist — HAIRÉA</title>
+  <meta name="description" content="View your saved clean hair care formulas, peptide masks, and glossing oils.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="alternate icon" href="favicon.svg">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <!-- Wishlist Banner -->
+  <section class="py-5 bg-secondary border-bottom">
+    <div class="container-fluid px-lg-5 py-3">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+          <span class="editorial-tag">Your Curated Collection</span>
+          <h1 class="editorial-heading-lg mt-1 mb-0">Saved Formulas</h1>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-hairea-gold" id="moveAllBtn" onclick="moveAllWishlistToCart()">
+            Move All to Ritual Bag
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wishlist Grid -->
+  <section class="py-5" style="min-height: 60vh;">
+    <div class="container-fluid px-lg-5">
+      <div class="row g-4" id="wishlistGridContainer">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    function renderWishlistPage() {
+      const container = document.getElementById("wishlistGridContainer");
+      const moveBtn = document.getElementById("moveAllBtn");
+      const list = Storage.getWishlist();
+
+      if (!container) return;
+
+      if (list.length === 0) {
+        if (moveBtn) moveBtn.style.display = "none";
+        container.innerHTML = `
+          <div class="col-12 text-center py-5">
+            <i data-lucide="heart" class="w-12 h-12 text-muted mb-3 mx-auto opacity-50" style="width: 48px; height: 48px;"></i>
+            <h3 class="font-serif mb-2">Your Wishlist is Empty</h3>
+            <p class="text-muted small mb-4">Explore our bespoke hair formulations or take the diagnostic quiz to find your match.</p>
+            <div class="d-flex justify-content-center gap-3">
+              <a href="shop.html" class="btn btn-hairea-gold">Shop All Products</a>
+              <a href="quiz.html" class="btn btn-hairea-outline">Take Hair Quiz</a>
+            </div>
+          </div>
+        `;
+        if (window.lucide) lucide.createIcons();
+        return;
+      }
+
+      if (moveBtn) moveBtn.style.display = "inline-flex";
+
+      container.innerHTML = list.map(p => `
+        <div class="col-md-6 col-lg-3">
+          <div class="product-card h-100">
+            <div class="product-card-img-wrapper">
+              <img src="${p.image}" alt="${p.name}">
+              <span class="product-badge-pill">${p.badge || 'Saved'}</span>
+              <div class="product-actions-hover">
+                <button class="action-round-btn active" onclick="App.toggleWishlist(Storage.getProducts().find(x => x.id === '${p.id}')); renderWishlistPage();" title="Remove from wishlist">
+                  <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                </button>
+              </div>
+            </div>
+            <div class="product-card-body">
+              <span class="product-category-tag">${p.category}</span>
+              <h4 class="product-title"><a href="product.html?id=${p.id}">${p.name}</a></h4>
+              <p class="product-subtitle">${p.subtitle}</p>
+              <div class="product-price-row mt-auto">
+                <div class="price-display">${App.formatPrice(p.price)}</div>
+                <button class="btn btn-sm btn-hairea-dark rounded-pill px-3" onclick="App.addToCartById('${p.id}', false)">
+                  Add to Bag
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join("");
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function moveAllWishlistToCart() {
+      const list = Storage.getWishlist();
+      list.forEach(p => App.addToCart(p, false));
+      Storage.setWishlist([]);
+      renderWishlistPage();
+      App.toast("All wishlist items moved to your ritual bag!");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => renderWishlistPage());
+  </script>
+</body>
+</html>
