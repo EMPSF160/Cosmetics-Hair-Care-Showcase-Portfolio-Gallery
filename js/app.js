@@ -323,35 +323,37 @@ const App = {
     });
   },
 
-  // Footer Component Rendering — Strict 1-Row Layout
+  // Footer Component Rendering — Strict 1-Row Layout & Full Width Crystal Clear Legibility
   renderFooter() {
     const footerContainer = document.getElementById("footer-placeholder");
     if (!footerContainer) return;
 
     footerContainer.innerHTML = `
       <footer class="hairea-footer">
-        <div class="container-fluid px-lg-5">
+        <div class="container-fluid">
           <div class="row g-4 g-xl-5 mb-5 align-items-start">
             <!-- 1. Brand & Newsletter (3 Cols) -->
             <div class="col-xl-3 col-lg-3 col-md-6 col-12">
-              <h2 class="font-serif text-white mb-2" style="letter-spacing: 0.15em; font-size: 1.8rem;">HAIRÉA</h2>
-              <p class="text-muted mb-3" style="font-size: 0.86rem; line-height: 1.5;">
+              <a href="index.html" class="d-inline-block text-decoration-none mb-2">
+                <h2 class="footer-brand-title">HAIRÉA</h2>
+              </a>
+              <p class="footer-desc mb-3">
                 Where molecular trichology meets Parisian couture hair rituals. Bespoke formulas engineered to heal your strand genetics.
               </p>
-              <div class="newsletter-box">
-                <span class="editorial-tag text-white mb-2" style="font-size: 0.65rem;">The Gazette</span>
-                <p class="small text-muted mb-2" style="font-size: 0.8rem;">Receive private diagnostic invites & 15% off.</p>
+              <div class="newsletter-box mt-3">
+                <span class="editorial-tag text-white mb-2 d-inline-block" style="font-size: 0.68rem; background: rgba(214, 185, 140, 0.2); border-color: rgba(214, 185, 140, 0.4); color: #E8CA9E !important;">The Gazette</span>
+                <p class="footer-subtext mb-2">Receive private diagnostic invites & 15% off.</p>
                 <form onsubmit="App.handleNewsletter(event)" class="d-flex gap-2">
-                  <input type="email" id="newsletterEmail" class="form-control form-control-sm bg-dark border-secondary text-white rounded-pill px-3" placeholder="Your email..." required style="font-size: 0.8rem;">
-                  <button type="submit" class="btn btn-sm btn-hairea-gold px-3 rounded-pill" style="font-size: 0.8rem;">Join</button>
+                  <input type="email" id="newsletterEmail" class="form-control newsletter-input" placeholder="Your email..." required>
+                  <button type="submit" class="btn btn-sm btn-hairea-gold px-3 rounded-pill fw-semibold" style="font-size: 0.82rem; white-space: nowrap;">Join</button>
                 </form>
               </div>
             </div>
 
             <!-- 2. Discover Links (2 Cols) -->
             <div class="col-xl-2 col-lg-2 col-md-3 col-6">
-              <h4 class="footer-heading" style="font-size: 1.15rem; margin-bottom: 14px;">Discover</h4>
-              <ul class="footer-links p-0 m-0">
+              <h4 class="footer-heading">Discover</h4>
+              <ul class="footer-links">
                 <li><a href="shop.html">Shop All Formulas</a></li>
                 <li><a href="shop.html?category=Shampoo">Silk Cleansers</a></li>
                 <li><a href="shop.html?category=Conditioner">Lipid Melts</a></li>
@@ -364,8 +366,8 @@ const App = {
 
             <!-- 3. Diagnostic Links (2 Cols) -->
             <div class="col-xl-2 col-lg-2 col-md-3 col-6">
-              <h4 class="footer-heading" style="font-size: 1.15rem; margin-bottom: 14px;">Diagnostic</h4>
-              <ul class="footer-links p-0 m-0">
+              <h4 class="footer-heading">Diagnostic</h4>
+              <ul class="footer-links">
                 <li><a href="quiz.html">Hair-Type Quiz</a></li>
                 <li><a href="routines.html">Curated Rituals</a></li>
                 <li><a href="transformations.html">Before / After Gallery</a></li>
@@ -377,8 +379,8 @@ const App = {
 
             <!-- 4. Atelier Links (2 Cols) -->
             <div class="col-xl-2 col-lg-2 col-md-3 col-6">
-              <h4 class="footer-heading" style="font-size: 1.15rem; margin-bottom: 14px;">Atelier</h4>
-              <ul class="footer-links p-0 m-0">
+              <h4 class="footer-heading">Atelier</h4>
+              <ul class="footer-links">
                 <li><a href="about.html">Our Formulation Lab</a></li>
                 <li><a href="about.html#sustainability">Ethical Sourcing</a></li>
                 <li><a href="contact.html">Salon Concierge</a></li>
@@ -390,15 +392,15 @@ const App = {
 
             <!-- 5. Standards & Social Icons (3 Cols) -->
             <div class="col-xl-3 col-lg-3 col-md-5 col-12">
-              <h4 class="footer-heading" style="font-size: 1.15rem; margin-bottom: 14px;">Standards & Atelier</h4>
-              <div class="d-flex flex-column gap-1 text-muted small mb-4" style="font-size: 0.8rem;">
+              <h4 class="footer-heading">Standards & Atelier</h4>
+              <div class="footer-standards-list mb-4">
                 <span>✦ 100% Sulfate-Free Formulas</span>
                 <span>✦ Zero Silicones or Phthalates</span>
                 <span>✦ Leaping Bunny Certified</span>
                 <span>✦ 100% Recycled Aluminum & Glass</span>
               </div>
               <div>
-                <span class="small text-uppercase fw-bold text-white d-block mb-2" style="letter-spacing: 0.1em; font-size: 0.72rem;">Connect With Us</span>
+                <span class="footer-social-label">Connect With Us</span>
                 <div class="d-flex flex-wrap gap-2 text-white align-items-center">
                   <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="Instagram" title="Instagram">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
@@ -420,13 +422,13 @@ const App = {
             </div>
           </div>
 
-          <div class="border-top border-secondary pt-4 d-flex flex-column flex-md-row justify-content-between align-items-center text-muted small gap-3">
-            <p class="mb-0">© 2026 HAIRÉA Cosmetics Atelier Inc. All rights reserved. "Know Your Hair. Love Your Ritual."</p>
-            <div class="d-flex gap-4">
-              <a href="#" class="text-muted">Privacy Policy</a>
-              <a href="#" class="text-muted">Terms of Service</a>
-              <a href="#" class="text-muted">Accessibility</a>
-              <a href="admin.html" class="text-muted">Admin Login</a>
+          <div class="footer-bottom-bar d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+            <p class="footer-copyright mb-0">© 2026 HAIRÉA Cosmetics Atelier Inc. All rights reserved. "Know Your Hair. Love Your Ritual."</p>
+            <div class="footer-bottom-links d-flex flex-wrap gap-4">
+              <a href="about.html">Privacy Policy</a>
+              <a href="about.html">Terms of Service</a>
+              <a href="contact.html">Accessibility</a>
+              <a href="admin.html">Admin Login</a>
             </div>
           </div>
         </div>

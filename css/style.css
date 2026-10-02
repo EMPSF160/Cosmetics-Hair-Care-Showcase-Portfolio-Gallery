@@ -15,8 +15,8 @@
   --bg-dark-editorial: #151313;
 
   --text-primary: #151313;
-  --text-secondary: #5A534E;
-  --text-muted: #8E857E;
+  --text-secondary: #4A4440;
+  --text-muted: #6B625B;
   --text-light: #F7F2EC;
 
   --accent-obsidian: #151313;
@@ -57,13 +57,13 @@
   --bg-glass: rgba(26, 24, 24, 0.7);
   --bg-dark-editorial: #0A0909;
 
-  --text-primary: #F7F2EC;
-  --text-secondary: #C5BCB3;
-  --text-muted: #8E857E;
-  --text-light: #F7F2EC;
+  --text-primary: #FAF6F0;
+  --text-secondary: #DDD5CD;
+  --text-muted: #B5ACA3;
+  --text-light: #FAF6F0;
 
-  --border-color: rgba(255, 255, 255, 0.08);
-  --border-color-dark: rgba(255, 255, 255, 0.15);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --border-color-dark: rgba(255, 255, 255, 0.18);
 
   --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.3);
   --shadow-medium: 0 10px 30px rgba(0, 0, 0, 0.5);
@@ -1332,46 +1332,169 @@ img {
    Footer
    ========================================================================== */
 
+/* ==========================================================================
+   Footer — Full Width & High Contrast Crystal Visibility in Both Modes
+   ========================================================================== */
+
+#footer-placeholder {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 .hairea-footer {
-  background-color: #121010;
-  color: #E8D8D5;
-  padding-top: 80px;
-  padding-bottom: 30px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  background-color: #111010 !important;
+  color: #ECE5DE !important;
+  padding-top: clamp(3rem, 5vw, 4.5rem) !important;
+  padding-bottom: clamp(1.5rem, 3vw, 2.5rem) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+  position: relative;
+  z-index: 10;
 }
 
-.footer-heading {
+.hairea-footer .container-fluid {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding-left: clamp(1.5rem, 4vw, 4rem) !important;
+  padding-right: clamp(1.5rem, 4vw, 4rem) !important;
+}
+
+.hairea-footer .footer-brand-title {
   font-family: var(--font-serif);
-  font-size: 1.4rem;
-  color: #FFF;
-  margin-bottom: 20px;
+  color: #FFFFFF !important;
+  letter-spacing: 0.15em;
+  font-size: 1.85rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
 }
 
-.footer-links li {
+.hairea-footer .footer-desc {
+  color: #D6CCC2 !important;
+  font-size: 0.88rem !important;
+  line-height: 1.6 !important;
+  max-width: 320px;
+}
+
+.hairea-footer .footer-subtext {
+  color: #C5BCB3 !important;
+  font-size: 0.82rem !important;
+  line-height: 1.4 !important;
+}
+
+.hairea-footer .footer-heading {
+  font-family: var(--font-serif);
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  color: #FFFFFF !important;
+  margin-bottom: 18px !important;
+  letter-spacing: 0.03em;
+}
+
+.hairea-footer .footer-links {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.hairea-footer .footer-links li {
+  margin-bottom: 11px !important;
+  list-style: none !important;
+}
+
+.hairea-footer .footer-links a {
+  color: #D2C7BD !important;
+  font-size: 0.9rem !important;
+  transition: all 0.25s ease !important;
+  text-decoration: none !important;
+  display: inline-block;
+  opacity: 1 !important;
+}
+
+.hairea-footer .footer-links a:hover {
+  color: #E8CA9E !important;
+  padding-left: 5px !important;
+  text-shadow: 0 0 10px rgba(232, 202, 158, 0.4);
+}
+
+.hairea-footer .footer-standards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #D8CEB4 !important;
+  font-size: 0.84rem !important;
+}
+
+.hairea-footer .footer-standards-list span {
+  color: #D8CEB4 !important;
+  display: block;
+}
+
+.hairea-footer .footer-social-label {
+  display: block;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  font-size: 0.74rem;
+  color: #FFFFFF !important;
   margin-bottom: 10px;
-  list-style: none;
 }
 
-.footer-links a {
-  color: #B5A8A4;
-  font-size: 0.88rem;
-  transition: var(--transition-fast);
+.hairea-footer .newsletter-input {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  color: #FFFFFF !important;
+  font-size: 0.84rem !important;
+  border-radius: 9999px !important;
+  padding: 7px 16px !important;
 }
 
-.footer-links a:hover {
-  color: var(--accent-champagne);
-  padding-left: 4px;
+.hairea-footer .newsletter-input::placeholder {
+  color: #A89F96 !important;
+}
+
+.hairea-footer .newsletter-input:focus {
+  background: rgba(255, 255, 255, 0.14) !important;
+  border-color: #D6B98C !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 0 3px rgba(214, 185, 140, 0.3) !important;
+}
+
+.hairea-footer .footer-bottom-bar {
+  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+  padding-top: 1.5rem !important;
+}
+
+.hairea-footer .footer-copyright {
+  color: #BDB4A8 !important;
+  font-size: 0.84rem !important;
+}
+
+.hairea-footer .footer-bottom-links a {
+  color: #BDB4A8 !important;
+  font-size: 0.84rem !important;
+  text-decoration: none !important;
+  transition: color 0.2s ease !important;
+}
+
+.hairea-footer .footer-bottom-links a:hover {
+  color: #FFFFFF !important;
+  text-decoration: underline !important;
 }
 
 .footer-social-icon {
-  width: 38px;
-  height: 38px;
-  min-width: 38px;
-  min-height: 38px;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  color: #F7F2EC;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #FFFFFF !important;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1384,20 +1507,20 @@ img {
 .footer-social-icon i {
   width: 18px;
   height: 18px;
-  stroke: #F7F2EC;
+  stroke: #FFFFFF !important;
   transition: stroke 0.3s ease;
 }
 
 .footer-social-icon:hover {
-  background: linear-gradient(135deg, #D6B98C 0%, #B8965E 100%);
-  color: #151313;
-  border-color: #D6B98C;
+  background: linear-gradient(135deg, #D6B98C 0%, #B8965E 100%) !important;
+  color: #151313 !important;
+  border-color: #D6B98C !important;
   transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(214, 185, 140, 0.35);
+  box-shadow: 0 6px 16px rgba(214, 185, 140, 0.4);
 }
 
 .footer-social-icon:hover svg {
-  stroke: #151313;
+  stroke: #151313 !important;
 }
 
 /* ==========================================================================
