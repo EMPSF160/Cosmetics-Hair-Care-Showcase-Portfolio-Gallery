@@ -180,8 +180,8 @@ const App = {
             <button class="nav-icon-btn" onclick="App.openSearchModal()" title="Search catalog">
               <i data-lucide="search"></i>
             </button>
-            <!-- Account -->
-            <a href="account.html" class="nav-icon-btn" title="My Account">
+            <!-- Customer Authentication -->
+            <a href="login.html" class="nav-icon-btn" title="Customer Authentication">
               <i data-lucide="user"></i>
             </a>
             <!-- Wishlist -->
@@ -233,8 +233,8 @@ const App = {
                 <a href="wishlist.html" class="btn btn-sm btn-hairea-outline w-100 d-flex align-items-center justify-content-center gap-2">
                   <i data-lucide="heart" style="width: 14px; height: 14px;"></i> Wishlist (<span id="mobileWishCount">0</span>)
                 </a>
-                <a href="account.html" class="btn btn-sm btn-hairea-outline w-100 d-flex align-items-center justify-content-center gap-2">
-                  <i data-lucide="user" style="width: 14px; height: 14px;"></i> Account
+                <a href="login.html" class="btn btn-sm btn-hairea-outline w-100 d-flex align-items-center justify-content-center gap-2">
+                  <i data-lucide="user" style="width: 14px; height: 14px;"></i> Sign In / Register
                 </a>
               </div>
             </div>
@@ -751,14 +751,16 @@ const App = {
     }
 
     container.innerHTML = filtered.map(p => `
-      <div class="col-md-6">
-        <div class="d-flex align-items-center gap-3 p-2 rounded glass-card border">
-          <img src="${p.image}" alt="${p.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
-          <div class="flex-grow-1">
-            <h6 class="font-serif mb-0"><a href="product.html?id=${p.id}">${p.name}</a></h6>
-            <span class="small text-muted">${p.category} • ${this.formatPrice(p.price)}</span>
+      <div class="col-md-6 col-12">
+        <div class="search-result-card d-flex align-items-center justify-content-between gap-3 p-3 rounded glass-card border">
+          <div class="d-flex align-items-center gap-3 flex-grow-1 min-w-0">
+            <img src="${p.image}" alt="${p.name}" class="search-result-thumb" style="width: 54px; height: 54px; min-width: 54px; object-fit: cover; border-radius: 8px;">
+            <div class="min-w-0 flex-grow-1">
+              <h6 class="font-serif mb-1 text-truncate"><a href="product.html?id=${p.id}" class="search-result-title fw-bold">${p.name}</a></h6>
+              <div class="small search-result-meta">${p.category} • <strong class="text-primary">${this.formatPrice(p.price)}</strong></div>
+            </div>
           </div>
-          <a href="product.html?id=${p.id}" class="btn btn-sm btn-hairea-dark px-3">View</a>
+          <a href="product.html?id=${p.id}" class="btn btn-sm btn-hairea-gold px-3 flex-shrink-0">View</a>
         </div>
       </div>
     `).join("");

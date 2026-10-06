@@ -17,50 +17,64 @@
 </head>
 <body>
 
-  <!-- Admin Top Bar -->
-  <div class="py-2 px-4 bg-dark text-white border-bottom border-secondary d-flex justify-content-between align-items-center">
+  <!-- Sticky Admin Top Bar -->
+  <header class="admin-topbar py-2 px-3 px-md-4 text-white d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center gap-3">
-      <a href="index.html" class="brand-logo text-white fs-4 text-decoration-none">HAIRÉA <span>Studio Admin</span></a>
-      <span class="badge bg-danger">LIVE LAB TELEMETRY</span>
-    </div>
-    <div class="d-flex align-items-center gap-3">
-      <a href="index.html" class="btn btn-sm btn-outline-light rounded-pill px-3">
-        <i data-lucide="external-link" style="width: 14px; height: 14px;"></i> View Storefront
+      <a href="index.html" class="brand-logo text-white fs-4 text-decoration-none">
+        HAIRÉA <span>Studio Admin</span>
       </a>
-      <button class="btn btn-sm btn-outline-warning rounded-pill px-3" onclick="AdminApp.resetDemoData()">
-        <i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i> Reset Demo Data
-      </button>
+      <span class="badge bg-danger d-none d-sm-inline-flex align-items-center gap-1">
+        <span class="spinner-grow spinner-grow-sm text-light" style="width: 8px; height: 8px;" role="status"></span>
+        LIVE LAB TELEMETRY
+      </span>
     </div>
-  </div>
 
-  <div class="container-fluid">
-    <div class="row">
-      <!-- Admin Sidebar -->
-      <div class="col-lg-2 p-0 admin-sidebar">
-        <div class="d-flex flex-column gap-1">
-          <button class="admin-nav-item active border-0 w-100 text-start" id="nav-dashboard" onclick="AdminApp.switchTab('dashboard')">
-            <i data-lucide="layout-dashboard"></i> Executive KPIs
-          </button>
-          <button class="admin-nav-item border-0 w-100 text-start" id="nav-products" onclick="AdminApp.switchTab('products')">
-            <i data-lucide="box"></i> Product Catalog
-          </button>
-          <button class="admin-nav-item border-0 w-100 text-start" id="nav-orders" onclick="AdminApp.switchTab('orders')">
-            <i data-lucide="shopping-cart"></i> Orders & Logistics
-          </button>
-          <button class="admin-nav-item border-0 w-100 text-start" id="nav-quiz" onclick="AdminApp.switchTab('quiz')">
-            <i data-lucide="dna"></i> Quiz Diagnostics Log
-          </button>
-          <button class="admin-nav-item border-0 w-100 text-start" id="nav-reviews" onclick="AdminApp.switchTab('reviews')">
-            <i data-lucide="star"></i> Reviews Moderation
-          </button>
-          <button class="admin-nav-item border-0 w-100 text-start" id="nav-transformations" onclick="AdminApp.switchTab('transformations')">
-            <i data-lucide="image"></i> Transformations Gallery
-          </button>
+    <!-- Admin Profile & Controls -->
+    <div class="d-flex align-items-center gap-3">
+      <div class="d-flex align-items-center gap-2 border-end pe-3 d-none d-md-flex">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="Admin Avatar" class="rounded-circle border border-warning" style="width: 36px; height: 36px; object-fit: cover;">
+        <div class="d-flex flex-column text-start">
+          <span class="small fw-bold text-white lh-1">Dr. Jean-Luc Delacroix</span>
+          <span class="text-warning lh-1" style="font-size: 0.68rem; letter-spacing: 0.05em;">Master Formulator & Admin</span>
         </div>
       </div>
 
-      <!-- Admin Main Workspace -->
-      <div class="col-lg-10 p-4 p-md-5">
+      <a href="index.html" class="btn btn-sm btn-outline-light rounded-pill px-3">
+        <i data-lucide="external-link" style="width: 14px; height: 14px;"></i> Storefront
+      </a>
+      <button class="btn btn-sm btn-outline-warning rounded-pill px-3" onclick="AdminApp.resetDemoData()">
+        <i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i> Reset Data
+      </button>
+    </div>
+  </header>
+
+  <div class="admin-layout-wrapper">
+    <!-- Sticky Admin Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="d-flex flex-column gap-1 w-100">
+        <button class="admin-nav-item active border-0" id="nav-dashboard" onclick="AdminApp.switchTab('dashboard')">
+          <i data-lucide="layout-dashboard"></i> <span>Executive KPIs</span>
+        </button>
+        <button class="admin-nav-item border-0" id="nav-products" onclick="AdminApp.switchTab('products')">
+          <i data-lucide="box"></i> <span>Product Catalog</span>
+        </button>
+        <button class="admin-nav-item border-0" id="nav-orders" onclick="AdminApp.switchTab('orders')">
+          <i data-lucide="shopping-cart"></i> <span>Orders & Logistics</span>
+        </button>
+        <button class="admin-nav-item border-0" id="nav-quiz" onclick="AdminApp.switchTab('quiz')">
+          <i data-lucide="dna"></i> <span>Quiz Diagnostics Log</span>
+        </button>
+        <button class="admin-nav-item border-0" id="nav-reviews" onclick="AdminApp.switchTab('reviews')">
+          <i data-lucide="star"></i> <span>Reviews Moderation</span>
+        </button>
+        <button class="admin-nav-item border-0" id="nav-transformations" onclick="AdminApp.switchTab('transformations')">
+          <i data-lucide="image"></i> <span>Transformations Gallery</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Admin Main Workspace -->
+    <main class="admin-main-content">
         
         <!-- Tab 1: Executive Dashboard KPIs -->
         <div class="admin-tab-content" id="tab-dashboard">
@@ -307,9 +321,8 @@
           </div>
         </div>
 
-      </div>
+      </main>
     </div>
-  </div>
 
   <!-- Add Product Modal -->
   <div class="modal fade" id="addProductModal" tabindex="-1">

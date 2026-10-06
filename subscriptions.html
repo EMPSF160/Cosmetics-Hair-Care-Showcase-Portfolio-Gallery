@@ -105,28 +105,30 @@
               <img src="${p.image}" alt="${p.name}">
               <span class="product-badge-pill">Subscribe & Save 20%</span>
             </div>
-            <div class="product-card-body">
+            <div class="product-card-body d-flex flex-column h-100">
               <span class="product-category-tag">${p.category}</span>
               <h4 class="product-title"><a href="product.html?id=${p.id}">${p.name}</a></h4>
-              <p class="product-subtitle">${p.subtitle}</p>
+              <p class="product-subtitle mb-3">${p.subtitle}</p>
               
-              <div class="mb-3 w-100 text-center">
-                <label class="small text-muted mb-1 d-block text-center">Frequency:</label>
-                <select class="form-select form-select-sm rounded-pill text-center mx-auto" style="max-width: 180px;" id="freq-${p.id}">
-                  <option value="Every 4 Weeks">Every 4 Weeks</option>
-                  <option value="Every 6 Weeks" selected>Every 6 Weeks</option>
-                  <option value="Every 8 Weeks">Every 8 Weeks</option>
-                </select>
-              </div>
-
-              <div class="product-price-row">
-                <div>
-                  <div class="price-display text-success">${App.formatPrice(p.price * 0.8)}</div>
-                  <span class="small text-decoration-line-through text-muted">${App.formatPrice(p.price)}</span>
+              <div class="mt-auto w-100 pt-2">
+                <div class="mb-3 w-100 text-center">
+                  <label class="small text-muted mb-1 d-block text-center">Frequency:</label>
+                  <select class="form-select form-select-sm rounded-pill text-center mx-auto" style="max-width: 180px;" id="freq-${p.id}">
+                    <option value="Every 4 Weeks">Every 4 Weeks</option>
+                    <option value="Every 6 Weeks" selected>Every 6 Weeks</option>
+                    <option value="Every 8 Weeks">Every 8 Weeks</option>
+                  </select>
                 </div>
-                <button class="btn btn-sm btn-hairea-gold rounded-pill px-3" onclick="handleSubscribeItem('${p.id}')">
-                  Subscribe
-                </button>
+
+                <div class="product-price-row pt-0 border-top-0">
+                  <div class="d-flex flex-column align-items-center mb-2">
+                    <div class="price-display text-success fw-bold fs-5">${App.formatPrice(p.price * 0.8)}</div>
+                    <span class="small text-decoration-line-through text-muted">${App.formatPrice(p.price)}</span>
+                  </div>
+                  <button class="btn btn-sm btn-hairea-gold rounded-pill px-4 py-2 w-100" onclick="handleSubscribeItem('${p.id}')">
+                    Subscribe
+                  </button>
+                </div>
               </div>
             </div>
           </div>

@@ -94,7 +94,7 @@ const AdminApp = {
             <option value="Cancelled" ${o.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
           </select>
         </td>
-        <td class="small text-muted">${o.tracking || 'N/A'}</td>
+        <td class="small"><span class="badge bg-secondary font-monospace" style="color: var(--accent-champagne) !important; letter-spacing: 0.05em;">${o.tracking || 'N/A'}</span></td>
       </tr>
     `).join("");
   },
@@ -108,7 +108,7 @@ const AdminApp = {
       <tr>
         <td>
           <div class="fw-bold">${r.author}</div>
-          <span class="small text-muted">${r.hairType}</span>
+          <span class="badge bg-secondary mt-1" style="font-size: 0.72rem; color: #DDD5CD !important;">${r.hairType}</span>
         </td>
         <td>${r.productName}</td>
         <td>⭐ ${r.rating}/5</td>
@@ -156,17 +156,17 @@ const AdminApp = {
     const res = Storage.getQuizResult();
 
     if (!res) {
-      tbody.innerHTML = `<tr><td colspan="6" class="text-center py-3 text-muted">No completed quizzes logged yet in this session. Take the quiz to see live telemetry!</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4" style="color: #DDD5CD !important; font-size: 0.95rem;">🔬 No completed quizzes logged yet in this session. Take the hair diagnostic quiz to see live telemetry!</td></tr>`;
       return;
     }
 
     tbody.innerHTML = `
       <tr>
-        <td class="font-monospace fw-bold">#${res.formulaCode}</td>
-        <td>${res.monogramName}</td>
+        <td class="font-monospace fw-bold" style="color: var(--accent-champagne) !important;">#${res.formulaCode}</td>
+        <td class="fw-bold">${res.monogramName}</td>
         <td>${res.hairType}</td>
         <td>${res.scalpCondition}</td>
-        <td><span class="badge bg-secondary text-dark">${res.primaryGoals.join(", ")}</span></td>
+        <td><span class="badge bg-secondary" style="color: #FAF6F0 !important;">${res.primaryGoals.join(", ")}</span></td>
         <td>${res.date}</td>
       </tr>
     `;
