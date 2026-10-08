@@ -19,7 +19,12 @@
 
   <!-- Sticky Admin Top Bar -->
   <header class="admin-topbar py-2 px-3 px-md-4 text-white d-flex justify-content-between align-items-center">
-    <div class="d-flex align-items-center gap-3">
+    <div class="d-flex align-items-center gap-2 gap-sm-3">
+      <!-- Mobile / Tablet Hamburger Menu Toggle -->
+      <button type="button" class="btn btn-sm btn-outline-light d-lg-none p-1 px-2 me-1" id="adminSidebarToggle" onclick="AdminApp.toggleSidebar()" aria-label="Toggle Dashboard Menu" title="Toggle Dashboard Menu">
+        <i data-lucide="menu" style="width: 20px; height: 20px;"></i>
+      </button>
+
       <a href="index.html" class="brand-logo text-white fs-4 text-decoration-none">
         HAIRÉA <span>Studio Admin</span>
       </a>
@@ -30,7 +35,7 @@
     </div>
 
     <!-- Admin Profile & Controls -->
-    <div class="d-flex align-items-center gap-3">
+    <div class="d-flex align-items-center gap-2 gap-md-3">
       <div class="d-flex align-items-center gap-2 border-end pe-3 d-none d-md-flex">
         <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="Admin Avatar" class="rounded-circle border border-warning" style="width: 36px; height: 36px; object-fit: cover;">
         <div class="d-flex flex-column text-start">
@@ -39,18 +44,37 @@
         </div>
       </div>
 
-      <a href="index.html" class="btn btn-sm btn-outline-light rounded-pill px-3">
+      <a href="index.html" class="btn btn-sm btn-outline-light rounded-pill px-3 d-none d-sm-inline-flex align-items-center gap-1">
         <i data-lucide="external-link" style="width: 14px; height: 14px;"></i> Storefront
       </a>
-      <button class="btn btn-sm btn-outline-warning rounded-pill px-3" onclick="AdminApp.resetDemoData()">
+      <button class="btn btn-sm btn-outline-warning rounded-pill px-3 d-none d-sm-inline-flex align-items-center gap-1" onclick="AdminApp.resetDemoData()">
         <i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i> Reset Data
       </button>
+
+      <!-- Logout Link to Home -->
+      <a href="index.html" class="btn btn-sm btn-hairea-gold rounded-pill px-3 d-inline-flex align-items-center gap-1" title="Sign out and return to Home page">
+        <i data-lucide="log-out" style="width: 14px; height: 14px;"></i> <span>Logout</span>
+      </a>
     </div>
   </header>
 
+  <!-- Sidebar Backdrop for Mobile/Tablet -->
+  <div class="admin-sidebar-backdrop d-lg-none" id="adminSidebarBackdrop" onclick="AdminApp.closeSidebar()"></div>
+
   <div class="admin-layout-wrapper">
     <!-- Sticky Admin Sidebar -->
-    <aside class="admin-sidebar">
+    <aside class="admin-sidebar" id="adminSidebar">
+      <!-- Mobile / Tablet Drawer Header with Close Button -->
+      <div class="d-flex d-lg-none justify-content-between align-items-center pb-3 mb-3 border-bottom border-secondary">
+        <div class="d-flex align-items-center gap-2">
+          <i data-lucide="sliders" class="text-warning" style="width: 18px; height: 18px;"></i>
+          <span class="fw-bold text-white small text-uppercase" style="letter-spacing: 0.05em;">Admin Navigation</span>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-light rounded-circle p-1 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;" onclick="AdminApp.closeSidebar()" aria-label="Close Navigation Menu">
+          <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+        </button>
+      </div>
+
       <div class="d-flex flex-column gap-1 w-100">
         <button class="admin-nav-item active border-0" id="nav-dashboard" onclick="AdminApp.switchTab('dashboard')">
           <i data-lucide="layout-dashboard"></i> <span>Executive KPIs</span>
@@ -70,6 +94,19 @@
         <button class="admin-nav-item border-0" id="nav-transformations" onclick="AdminApp.switchTab('transformations')">
           <i data-lucide="image"></i> <span>Transformations Gallery</span>
         </button>
+      </div>
+
+      <!-- Quick Actions and Logout Link in Sidebar Footer -->
+      <div class="mt-auto pt-4 border-top border-secondary d-flex flex-column gap-2">
+        <a href="index.html" class="admin-nav-item text-white text-decoration-none border-0 w-100 d-lg-none">
+          <i data-lucide="external-link"></i> <span>Storefront</span>
+        </a>
+        <button class="admin-nav-item text-warning border-0 w-100 text-start d-lg-none" onclick="AdminApp.resetDemoData()">
+          <i data-lucide="rotate-ccw"></i> <span>Reset Data</span>
+        </button>
+        <a href="index.html" class="admin-nav-item text-danger text-decoration-none border-0 w-100" title="Sign out and return to Home">
+          <i data-lucide="log-out"></i> <span>Logout to Home</span>
+        </a>
       </div>
     </aside>
 

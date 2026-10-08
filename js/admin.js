@@ -26,6 +26,9 @@ const AdminApp = {
     if (targetContent) targetContent.classList.remove("d-none");
     if (targetNav) targetNav.classList.add("active");
     if (window.lucide) lucide.createIcons();
+
+    // Automatically close mobile/tablet drawer when tab is chosen
+    this.closeSidebar();
   },
 
   renderMetrics() {
@@ -272,8 +275,45 @@ const AdminApp = {
     setTimeout(() => window.location.reload(), 800);
   },
 
+  toggleSidebar() {
+    const sidebar = document.getElementById("adminSidebar");
+    const backdrop = document.getElementById("adminSidebarBackdrop");
+    const isOpen = sidebar && sidebar.classList.contains("show");
+    if (isOpen) {
+      this.closeSidebar();
+    } else {
+      this.openSidebar();
+    }
+  },
+
+  openSidebar() {
+    const sidebar = document.getElementById("adminSidebar");
+    const backdrop = document.getElementById("adminSidebarBackdrop");
+    if (sidebar) sidebar.classList.add("show");
+    if (backdrop) backdrop.classList.add("show");
+    document.body.style.overflow = window.innerWidth < 992 ? "hidden" : "";
+  },
+
+  closeSidebar() {
+    const sidebar = document.getElementById("adminSidebar");
+    const backdrop = document.getElementById("adminSidebarBackdrop");
+    if (sidebar) sidebar.classList.remove("show");
+    if (backdrop) backdrop.classList.remove("show");
+    document.body.style.overflow = "";
+  },
+
   bindSidebar() {
-    //
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        this.closeSidebar();
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth >= 992) {
+        this.closeSidebar();
+      }
+    });
   }
 };
 
